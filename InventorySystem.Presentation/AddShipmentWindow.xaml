@@ -1,0 +1,45 @@
+﻿<Window x:Class="InventorySystem.Presentation.AddShipmentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Add Shipment" Height="300" Width="400"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Truck ID -->
+        <Label Content="Truck ID:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <TextBox x:Name="TruckIdBox" Grid.Row="0" Grid.Column="1" Margin="10,5"/>
+
+        <!-- Destination -->
+        <Label Content="Destination:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <TextBox x:Name="DestinationBox" Grid.Row="1" Grid.Column="1" Margin="10,5"/>
+
+        <!-- Load Capacity -->
+        <Label Content="Load Capacity:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <TextBox x:Name="CapacityBox" Grid.Row="2" Grid.Column="1" Margin="10,5"/>
+
+        <!-- Status -->
+        <Label Content="Status:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <ComboBox x:Name="StatusBox" Grid.Row="3" Grid.Column="1" Margin="10,5">
+            <ComboBoxItem Content="Pending" IsSelected="True"/>
+            <ComboBoxItem Content="In Transit"/>
+            <ComboBoxItem Content="Delivered"/>
+        </ComboBox>
+
+        <!-- Save Button -->
+        <Button Content="Add" Grid.Row="4" Grid.Column="1" Width="80"
+                HorizontalAlignment="Right" Margin="10,15,0,0"
+                Click="Add_Click"/>
+    </Grid>
+</Window>
+

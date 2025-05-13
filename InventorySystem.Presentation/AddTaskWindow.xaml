@@ -1,0 +1,52 @@
+﻿<Window x:Class="InventorySystem.Presentation.AddTaskWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Add Task" Height="400" Width="450"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Title -->
+        <Label Content="Title:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <TextBox x:Name="TitleBox" Grid.Row="0" Grid.Column="1" Margin="10,5"/>
+
+        <!-- Description -->
+        <Label Content="Description:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <TextBox x:Name="DescriptionBox" Grid.Row="1" Grid.Column="1" Margin="10,5" Height="60"
+                 AcceptsReturn="True" TextWrapping="Wrap"/>
+
+        <!-- Due Date -->
+        <Label Content="Due Date:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <DatePicker x:Name="DueDatePicker" Grid.Row="2" Grid.Column="1" Margin="10,5"/>
+
+        <!-- Status -->
+        <Label Content="Status:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <ComboBox x:Name="StatusBox" Grid.Row="3" Grid.Column="1" Margin="10,5">
+            <ComboBoxItem Content="Pending" IsSelected="True"/>
+            <ComboBoxItem Content="In Progress"/>
+            <ComboBoxItem Content="Completed"/>
+        </ComboBox>
+
+        <!-- Assigned User -->
+        <Label Content="Assign To:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <ComboBox x:Name="UserBox" Grid.Row="4" Grid.Column="1" Margin="10,5"
+                  DisplayMemberPath="Username" SelectedValuePath="Id"/>
+
+        <!-- Save Button -->
+        <Button Content="Add" Grid.Row="5" Grid.Column="1" Width="80"
+                HorizontalAlignment="Right" Margin="10,15,0,0"
+                Click="Add_Click"/>
+    </Grid>
+</Window>

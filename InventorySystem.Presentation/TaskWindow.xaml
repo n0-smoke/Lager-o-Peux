@@ -1,0 +1,38 @@
+﻿<Window x:Class="InventorySystem.Presentation.TaskWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Task Assignment" Height="450" Width="700"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Text="Assigned Tasks" FontSize="18" FontWeight="Bold" />
+
+        <!-- Task Table -->
+        <DataGrid x:Name="TaskGrid"
+                  Grid.Row="1"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
+                <DataGridTextColumn Header="Assigned To" Binding="{Binding AssignedToUser.Username}" Width="*"/>
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="Auto"/>
+                <DataGridTextColumn Header="Due Date" Binding="{Binding DueDate}" Width="Auto"/>
+                <DataGridTextColumn Header="Created At" Binding="{Binding CreatedAt}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Action Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="Add" Click="Add_Click" Margin="0,0,10,0"/>
+            <Button Content="Edit" Click="Edit_Click" Margin="0,0,10,0"/>
+            <Button Content="Delete" Click="Delete_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
