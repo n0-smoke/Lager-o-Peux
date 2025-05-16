@@ -2,17 +2,15 @@
 using System.Windows;
 using InventorySystem.Domain.Models;
 using InventorySystem.Infrastructure.Context;
-using InventorySystem.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventorySystem.Presentation
 {
-    public partial class ShipmentWindow : Window
+    public partial class TruckWindow : Window
     {
-        private readonly ShipmentService _shipmentService;
         private readonly AppDbContext _context;
 
-        public ShipmentWindow()
+        public TruckWindow()
         {
             InitializeComponent();
 
@@ -20,26 +18,19 @@ namespace InventorySystem.Presentation
             optionsBuilder.UseSqlServer("Server=localhost,1433;Database=InventoryDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True");
 
             _context = new AppDbContext(optionsBuilder.Options);
-            _shipmentService = new ShipmentService(_context);
 
             LoadData();
         }
 
         private void LoadData()
         {
-            var shipments = _context.Shipments
-                .Include(s => s.Truck)
-                .ToList();
-
-            ShipmentGrid.ItemsSource = shipments;
+            TruckGrid.ItemsSource = _context.Trucks.ToList();
         }
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            var addWindow = new AddShipmentWindow();
-            bool? result = addWindow.ShowDialog();
-
-            if (result == true)
+            var addWindow = new AddTruckWindow();
+            if (addWindow.ShowDialog() == true)
             {
                 LoadData();
             }
@@ -47,45 +38,41 @@ namespace InventorySystem.Presentation
 
         private void Edit_Click(object sender, RoutedEventArgs e)
         {
-            var selected = ShipmentGrid.SelectedItem as Shipment;
-
+            var selected = TruckGrid.SelectedItem as Truck;
             if (selected == null)
             {
-                MessageBox.Show("Please select a shipment to edit.");
+                MessageBox.Show("Please select a truck to edit.");
                 return;
             }
 
-            var editWindow = new EditShipmentWindow(selected);
-            bool? result = editWindow.ShowDialog();
-
-            if (result == true)
+            var editWindow = new EditTruckWindow(selected);
+            if (editWindow.ShowDialog() == true)
             {
                 LoadData();
             }
         }
-
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            var selected = ShipmentGrid.SelectedItem as Shipment;
-
+            var selected = TruckGrid.SelectedItem as Truck;
             if (selected == null)
             {
-                MessageBox.Show("Please select a shipment to delete.");
+                MessageBox.Show("Please select a truck to delete.");
                 return;
             }
 
-            var confirm = MessageBox.Show($"Are you sure you want to delete shipment to '{selected.Destination}'?",
+            var confirm = MessageBox.Show($"Are you sure you want to delete truck '{selected.Identifier}'?",
                                           "Confirm Delete",
                                           MessageBoxButton.YesNo,
                                           MessageBoxImage.Warning);
 
             if (confirm == MessageBoxResult.Yes)
             {
-                _shipmentService.DeleteShipment(selected.Id);
+                _context.Trucks.Remove(selected);
+                _context.SaveChanges();
                 LoadData();
-                MessageBox.Show("Shipment deleted.");
+                MessageBox.Show("Truck deleted.");
             }
         }
+
     }
 }
-

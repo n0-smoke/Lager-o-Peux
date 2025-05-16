@@ -53,6 +53,11 @@ namespace InventorySystem.Presentation
             var registerWindow = new RegisterUserWindow();
             registerWindow.ShowDialog();
         }
+        private void OpenTruck_Click(object sender, RoutedEventArgs e)
+        {
+            var truckWindow = new TruckWindow();
+            truckWindow.ShowDialog();
+        }
 
     }
 }

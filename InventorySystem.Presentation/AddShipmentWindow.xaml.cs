@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using InventorySystem.Domain.Models;
@@ -10,6 +11,7 @@ namespace InventorySystem.Presentation
 {
     public partial class AddShipmentWindow : Window
     {
+        private readonly AppDbContext _context;
         private readonly ShipmentService _shipmentService;
 
         public AddShipmentWindow()
@@ -19,17 +21,31 @@ namespace InventorySystem.Presentation
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optionsBuilder.UseSqlServer("Server=localhost,1433;Database=InventoryDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True");
 
-            var context = new AppDbContext(optionsBuilder.Options);
-            _shipmentService = new ShipmentService(context);
+            _context = new AppDbContext(optionsBuilder.Options);
+            _shipmentService = new ShipmentService(_context);
+
+            LoadTrucks();
+        }
+
+        private void LoadTrucks()
+        {
+            var trucks = _context.Trucks.ToList();
+            TruckComboBox.ItemsSource = trucks;
         }
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
+            if (TruckComboBox.SelectedItem is not Truck selectedTruck)
+            {
+                MessageBox.Show("Please select a truck.");
+                return;
+            }
+
             var shipment = new Shipment
             {
-                TruckId = TruckIdBox.Text,
+                TruckId = selectedTruck.Id,
+                Truck = selectedTruck,
                 Destination = DestinationBox.Text,
-                LoadCapacity = int.TryParse(CapacityBox.Text, out int cap) ? cap : 0,
                 Status = ((ComboBoxItem)StatusBox.SelectedItem)?.Content?.ToString() ?? "Pending",
                 CreatedAt = DateTime.UtcNow
             };
@@ -42,3 +58,4 @@ namespace InventorySystem.Presentation
         }
     }
 }
+

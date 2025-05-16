@@ -13,7 +13,7 @@ namespace InventorySystem.Presentation
 
         public AddInventoryItemWindow()
         {
-            InitializeComponent();  // This will now resolve correctly
+            InitializeComponent();
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optionsBuilder.UseSqlServer("Server=localhost,1433;Database=InventoryDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True");
@@ -24,12 +24,26 @@ namespace InventorySystem.Presentation
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
+            // Basic validation
+            if (!int.TryParse(QuantityBox.Text, out int quantity))
+            {
+                MessageBox.Show("Invalid quantity.");
+                return;
+            }
+
+            if (!double.TryParse(WeightBox.Text, out double weight))
+            {
+                MessageBox.Show("Invalid weight per unit.");
+                return;
+            }
+
             var item = new InventoryItem
             {
                 Name = NameBox.Text,
                 Category = CategoryBox.Text,
                 Supplier = SupplierBox.Text,
-                Quantity = int.TryParse(QuantityBox.Text, out int q) ? q : 0,
+                Quantity = quantity,
+                WeightPerUnit = weight,
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -41,3 +55,4 @@ namespace InventorySystem.Presentation
         }
     }
 }
+

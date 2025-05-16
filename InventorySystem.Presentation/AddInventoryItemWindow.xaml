@@ -1,10 +1,11 @@
 ﻿<Window x:Class="InventorySystem.Presentation.AddInventoryItemWindow" 
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-        Title="Inventory Item" Height="300" Width="400"
+        Title="Add Inventory Item" Height="360" Width="420"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid Margin="20">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -33,9 +34,13 @@
         <Label Content="Supplier:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
         <TextBox x:Name="SupplierBox" Grid.Row="3" Grid.Column="1" Margin="10,5"/>
 
-        <!-- Button -->
+        <!-- Weight Per Unit -->
+        <Label Content="Weight per Unit (kg):" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <TextBox x:Name="WeightBox" Grid.Row="4" Grid.Column="1" Margin="10,5"/>
+
+        <!-- Save Button -->
         <Button Content="Save"
-                Grid.Row="4"
+                Grid.Row="5"
                 Grid.Column="1"
                 HorizontalAlignment="Right"
                 Width="80"
