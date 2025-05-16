@@ -16,12 +16,13 @@
                    Margin="0,0,0,20" />
 
         <!-- Service Buttons -->
-        <StackPanel Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Orientation="Vertical" Width="200">
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" Orientation="Vertical" Width="200" Height="160" Margin="0,41,0,0" Grid.RowSpan="2">
             <Button Content="Inventory Management" Click="OpenInventory_Click" Margin="0,0,0,10"/>
             <Button Content="Shipment Management" Click="OpenShipment_Click" Margin="0,0,0,10"/>
             <Button Content="Task Assignment" Click="OpenTasks_Click" Margin="0,0,0,10"/>
             <Button Content="Analytics Dashboard" Click="OpenAnalytics_Click"/>
             <Button Content="Register New User" Click="RegisterUser_Click" Margin="0,10,0,0"/>
+            <Button Content="Truck Management" Click="OpenTruck_Click" Margin="0,0,10,0"/>
         </StackPanel>
     </Grid>
 </Window>

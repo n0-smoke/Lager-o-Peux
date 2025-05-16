@@ -28,14 +28,28 @@ namespace InventorySystem.Presentation
             CategoryBox.Text = _item.Category;
             QuantityBox.Text = _item.Quantity.ToString();
             SupplierBox.Text = _item.Supplier;
+            WeightBox.Text = _item.WeightPerUnit.ToString("F2");
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
+            if (!int.TryParse(QuantityBox.Text, out int quantity))
+            {
+                MessageBox.Show("Invalid quantity.");
+                return;
+            }
+
+            if (!double.TryParse(WeightBox.Text, out double weight))
+            {
+                MessageBox.Show("Invalid weight per unit.");
+                return;
+            }
+
             _item.Name = NameBox.Text;
             _item.Category = CategoryBox.Text;
-            _item.Quantity = int.TryParse(QuantityBox.Text, out int quantity) ? quantity : 0;
+            _item.Quantity = quantity;
             _item.Supplier = SupplierBox.Text;
+            _item.WeightPerUnit = weight;
 
             _inventoryService.UpdateItem(_item);
 
@@ -45,3 +59,4 @@ namespace InventorySystem.Presentation
         }
     }
 }
+

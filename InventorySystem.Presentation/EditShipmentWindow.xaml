@@ -9,35 +9,33 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Truck ID -->
-        <Label Content="Truck ID:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-        <TextBox x:Name="TruckIdBox" Grid.Row="0" Grid.Column="1" Margin="10,5"/>
+        <!-- Truck Selection -->
+        <Label Content="Truck:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <ComboBox x:Name="TruckComboBox"
+                  Grid.Row="0" Grid.Column="1" Margin="10,5"
+                  DisplayMemberPath="Identifier"
+                  SelectedValuePath="Id"/>
 
         <!-- Destination -->
         <Label Content="Destination:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
         <TextBox x:Name="DestinationBox" Grid.Row="1" Grid.Column="1" Margin="10,5"/>
 
-        <!-- Load Capacity -->
-        <Label Content="Load Capacity:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-        <TextBox x:Name="CapacityBox" Grid.Row="2" Grid.Column="1" Margin="10,5"/>
-
         <!-- Status -->
-        <Label Content="Status:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-        <ComboBox x:Name="StatusBox" Grid.Row="3" Grid.Column="1" Margin="10,5">
+        <Label Content="Status:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <ComboBox x:Name="StatusBox" Grid.Row="2" Grid.Column="1" Margin="10,5">
             <ComboBoxItem Content="Pending"/>
             <ComboBoxItem Content="In Transit"/>
             <ComboBoxItem Content="Delivered"/>
         </ComboBox>
 
         <!-- Save Button -->
-        <Button Content="Save" Grid.Row="4" Grid.Column="1" Width="80"
+        <Button Content="Save" Grid.Row="3" Grid.Column="1" Width="80"
                 HorizontalAlignment="Right" Margin="10,15,0,0"
                 Click="Save_Click"/>
     </Grid>

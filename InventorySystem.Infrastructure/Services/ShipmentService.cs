@@ -40,5 +40,13 @@ namespace InventorySystem.Infrastructure.Services
                 _context.SaveChanges();
             }
         }
+        public bool IsWithinTruckCapacity(Shipment shipment)
+        {
+            double totalWeight = shipment.ShipmentItems.Sum(i =>
+                i.InventoryItem.WeightPerUnit * i.Quantity);
+
+            return totalWeight <= shipment.Truck.MaxCapacityKg;
+        }
+
     }
 }

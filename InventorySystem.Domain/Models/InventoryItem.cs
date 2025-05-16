@@ -15,6 +15,8 @@ namespace InventorySystem.Domain.Models
         public string Supplier { get; set; }
         public int ReorderThreshold { get; set; } = 10;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public double WeightPerUnit { get; set; } // in kg
+
         // public ICollection<InventoryTransaction>? Transactions { get; set; }
     }
 }
