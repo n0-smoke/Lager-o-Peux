@@ -20,12 +20,14 @@ namespace InventorySystem.Infrastructure.Context
         public DbSet<Shipment> Shipments { get; set; }
         public DbSet<TaskAssignment> TaskAssignments { get; set; }
         public DbSet<InventoryTransaction> InventoryTransactions { get; set; }
+        public DbSet<ShipmentItem> ShipmentItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             // Optional: Add any Fluent API configurations here
+            // In this method we cna configure keys, indexing, table/column names, but its good for now as it is as EF maps it automatically
         }
     }
 }

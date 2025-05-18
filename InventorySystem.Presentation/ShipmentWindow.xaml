@@ -23,6 +23,7 @@
                 <DataGridTextColumn Header="Destination" Binding="{Binding Destination}" Width="*"/>
                 <DataGridTextColumn Header="Capacity" Binding="{Binding LoadCapacity}" Width="Auto"/>
                 <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="Auto"/>
+                <DataGridTextColumn Header="Direction" Binding="{Binding Direction}" Width="Auto"/>
                 <DataGridTextColumn Header="Created At" Binding="{Binding CreatedAt}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>

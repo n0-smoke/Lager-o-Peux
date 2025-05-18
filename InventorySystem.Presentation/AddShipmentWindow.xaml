@@ -36,9 +36,16 @@
             <ComboBoxItem Content="Delivered"/>
         </ComboBox>
 
+        <!-- Direction -->
+        <Label Content="Direction:"  Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <ComboBox x:Name="DirectionBox" SelectedIndex="0" Grid.Row="4" Grid.Column="1" Margin="10,5">
+            <ComboBoxItem Content="Incoming" />
+            <ComboBoxItem Content="Outgoing" />
+        </ComboBox>
+
         <!-- Save Button -->
         <Button Content="Add" Grid.Row="4" Grid.Column="1" Width="80"
-                HorizontalAlignment="Right" Margin="10,15,0,0"
+                HorizontalAlignment="Right" Margin="0,69,10,-54"
                 Click="Add_Click"/>
     </Grid>
 </Window>

@@ -47,11 +47,25 @@ namespace InventorySystem.Presentation
             _shipment.LoadCapacity = int.TryParse(CapacityBox.Text, out int cap) ? cap : 0;
             _shipment.Status = ((ComboBoxItem)StatusBox.SelectedItem)?.Content?.ToString() ?? "Pending";
 
-            _shipmentService.UpdateShipment(_shipment);
+            try
+            {
+                // Apply inventory logic if just marked as Delivered and not already applied
+                if (_shipment.Status == "Delivered" && !_shipment.IsInventoryApplied)
+                {
+                    _shipmentService.ApplyShipmentToInventory(_shipment);
+                }
 
-            MessageBox.Show("Shipment updated successfully.");
-            this.DialogResult = true;
-            this.Close();
+                _shipmentService.UpdateShipment(_shipment);
+
+                MessageBox.Show("Shipment updated successfully.");
+                this.DialogResult = true;
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Update Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
     }
 }

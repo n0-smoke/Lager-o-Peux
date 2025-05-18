@@ -17,6 +17,9 @@ namespace InventorySystem.Domain.Models
         public int? AssignedEmployeeId { get; set; }
         public User? AssignedEmployee { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public String Direction { get; set; }
+        public List<ShipmentItem> Items { get; set; } = new();
+        public bool IsInventoryApplied { get; set; } = false;
     }
 }
 

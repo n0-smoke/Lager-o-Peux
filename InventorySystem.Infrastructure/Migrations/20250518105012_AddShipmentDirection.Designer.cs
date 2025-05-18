@@ -4,6 +4,7 @@ using InventorySystem.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventorySystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250518105012_AddShipmentDirection")]
+    partial class AddShipmentDirection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,9 +114,6 @@ namespace InventorySystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsInventoryApplied")
-                        .HasColumnType("bit");
-
                     b.Property<int>("LoadCapacity")
                         .HasColumnType("int");
 
@@ -133,32 +133,6 @@ namespace InventorySystem.Infrastructure.Migrations
                     b.HasIndex("AssignedEmployeeId");
 
                     b.ToTable("Shipments");
-                });
-
-            modelBuilder.Entity("InventorySystem.Domain.Models.ShipmentItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("InventoryItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ShipmentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InventoryItemId");
-
-                    b.HasIndex("ShipmentId");
-
-                    b.ToTable("ShipmentItems");
                 });
 
             modelBuilder.Entity("InventorySystem.Domain.Models.TaskAssignment", b =>
@@ -251,25 +225,6 @@ namespace InventorySystem.Infrastructure.Migrations
                     b.Navigation("AssignedEmployee");
                 });
 
-            modelBuilder.Entity("InventorySystem.Domain.Models.ShipmentItem", b =>
-                {
-                    b.HasOne("InventorySystem.Domain.Models.InventoryItem", "InventoryItem")
-                        .WithMany()
-                        .HasForeignKey("InventoryItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InventorySystem.Domain.Models.Shipment", "Shipment")
-                        .WithMany("Items")
-                        .HasForeignKey("ShipmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("InventoryItem");
-
-                    b.Navigation("Shipment");
-                });
-
             modelBuilder.Entity("InventorySystem.Domain.Models.TaskAssignment", b =>
                 {
                     b.HasOne("InventorySystem.Domain.Models.User", "AssignedToUser")
@@ -277,11 +232,6 @@ namespace InventorySystem.Infrastructure.Migrations
                         .HasForeignKey("AssignedToUserId");
 
                     b.Navigation("AssignedToUser");
-                });
-
-            modelBuilder.Entity("InventorySystem.Domain.Models.Shipment", b =>
-                {
-                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

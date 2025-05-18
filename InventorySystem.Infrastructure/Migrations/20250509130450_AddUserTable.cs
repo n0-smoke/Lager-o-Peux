@@ -11,8 +11,8 @@ namespace InventorySystem.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "TestEntities");
+           // migrationBuilder.DropTable(
+           //     name: "TestEntities");
 
             migrationBuilder.CreateTable(
                 name: "Users",

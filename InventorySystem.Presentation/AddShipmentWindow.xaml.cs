@@ -31,7 +31,8 @@ namespace InventorySystem.Presentation
                 Destination = DestinationBox.Text,
                 LoadCapacity = int.TryParse(CapacityBox.Text, out int cap) ? cap : 0,
                 Status = ((ComboBoxItem)StatusBox.SelectedItem)?.Content?.ToString() ?? "Pending",
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                Direction = ((ComboBoxItem)DirectionBox.SelectedItem)?.Content?.ToString() ?? "Incoming"
             };
 
             _shipmentService.AddShipment(shipment);
