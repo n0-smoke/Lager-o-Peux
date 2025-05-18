@@ -3,43 +3,157 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
         Title="Inventory Item" Height="300" Width="400"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+    <Window.Resources>
+        <Storyboard x:Key="RotateTest" RepeatBehavior="Forever">
+            <DoubleAnimation
+                Storyboard.TargetName="RotateTransform2"
+                Storyboard.TargetProperty="Angle"
+                From="177" To="537"
+                Duration="0:2:00"/>
+        </Storyboard>
+    </Window.Resources>
 
-        <!-- Name -->
-        <Label Content="Name:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-        <TextBox x:Name="NameBox" Grid.Row="0" Grid.Column="1" Margin="10,5"/>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource RotateTest}"/>
+        </EventTrigger>
+    </Window.Triggers>
 
-        <!-- Category -->
-        <Label Content="Category:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-        <TextBox x:Name="CategoryBox" Grid.Row="1" Grid.Column="1" Margin="10,5"/>
+    <Grid>
+        <!-- Background Canvas for rotating paths -->
+        <Canvas Panel.ZIndex="0">
+            <Path Stroke="LightBlue" StrokeThickness="5" Fill="LightBlue" Opacity="0.3"
+                  Data="M 10,10 L 150,10 L 10,150 Z"
+                  Height="200" Width="150"
+                  Margin="20"
+                  RenderTransformOrigin="0.5,0.5">
+                <Path.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform x:Name="RotateTransform1" Angle="12.364"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Path.RenderTransform>
+                <Path.Triggers>
+                    <EventTrigger RoutedEvent="Path.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard RepeatBehavior="Forever">
+                                <DoubleAnimation Storyboard.TargetName="RotateTransform1"
+                                                 Storyboard.TargetProperty="Angle"
+                                                 From="0" To="360"
+                                                 Duration="0:2:0"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Path.Triggers>
+            </Path>
 
-        <!-- Quantity -->
-        <Label Content="Quantity:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-        <TextBox x:Name="QuantityBox" Grid.Row="2" Grid.Column="1" Margin="10,5"/>
+            <Path Stroke="LightBlue" StrokeThickness="5" Fill="LightBlue" Opacity="0.3"
+                  Data="M 10,10 L 1500,10 L 10,150 Z"
+                  Height="119" Width="153"
+                  HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                  RenderTransformOrigin="0.5,0.5" Canvas.Left="241.605" Stretch="Fill" Canvas.Top="121.19">
+                <Path.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="-1"/>
+                        <SkewTransform/>
+                        <RotateTransform x:Name="RotateTransform2" Angle="-271.39"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Path.RenderTransform>
+                <Path.Triggers>
+                    <EventTrigger RoutedEvent="Path.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard RepeatBehavior="Forever">
+                                <DoubleAnimation Storyboard.TargetName="RotateTransform2"
+                                                 Storyboard.TargetProperty="Angle"
+                                                 From="177" To="537"
+                                                 Duration="0:2:0"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Path.Triggers>
+            </Path>
+        </Canvas>
 
-        <!-- Supplier -->
-        <Label Content="Supplier:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-        <TextBox x:Name="SupplierBox" Grid.Row="3" Grid.Column="1" Margin="10,5"/>
+        <!-- Foreground Form Content -->
+        <Grid Margin="20" Panel.ZIndex="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <!-- Button -->
-        <Button Content="Save"
-                Grid.Row="4"
-                Grid.Column="1"
-                HorizontalAlignment="Right"
-                Width="80"
-                Margin="10,15,0,0"
-                Click="Add_Click"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Name -->
+            <Label Content="Name:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+            <TextBox x:Name="NameBox" Grid.Row="0" Grid.Column="1" Margin="10,5" FontFamily="Candara"/>
+
+            <!-- Category -->
+            <Label Content="Category:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+            <TextBox x:Name="CategoryBox" Grid.Row="1" Grid.Column="1" Margin="10,5"/>
+
+            <!-- Quantity -->
+            <Label Content="Quantity:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+            <TextBox x:Name="QuantityBox" Grid.Row="2" Grid.Column="1" Margin="10,5"/>
+
+            <!-- Supplier -->
+            <Label Content="Supplier:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+            <TextBox x:Name="SupplierBox" Grid.Row="3" Grid.Column="1" Margin="10,5"/>
+
+            <!-- Save Button -->
+            <Button Content="Save" Width="120" Height="35"
+                    Background="LightBlue" Foreground="Black"
+                    FontFamily="Consolas" FontWeight="Bold"
+                    Click="Add_Click" Grid.Row="4" Margin="0,37,0,-17"
+                    HorizontalAlignment="Center" Grid.Column="1">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)"
+                                                            To="DeepSkyBlue" Duration="0:0:0.3"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                             To="1.1" Duration="0:0:0.3"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                             To="1.1" Duration="0:0:0.3"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)"
+                                                            To="LightBlue" Duration="0:0:0.3"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                             To="1" Duration="0:0:0.3"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                             To="1" Duration="0:0:0.3"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
     </Grid>
 </Window>

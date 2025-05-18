@@ -23,8 +23,9 @@ namespace InventorySystem.Presentation
             }
 
             // Launch only the login window
-            var loginWindow = new LoginWindow();
-            loginWindow.Show();
+            var mainWindow = new MainWindow();
+            mainWindow.Show();
+
         }
     }
 }

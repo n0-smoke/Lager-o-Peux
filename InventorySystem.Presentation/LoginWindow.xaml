@@ -1,21 +1,171 @@
 ﻿<Window x:Class="InventorySystem.Presentation.LoginWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Login" Height="200" Width="300" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        Title="Login" Height="350" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Storyboard x:Key="RotateTest" RepeatBehavior="Forever">
+            <DoubleAnimation
+                Storyboard.TargetName="RotateTransform2"
+                Storyboard.TargetProperty="Angle"
+                From="177" To="537"
+                Duration="0:2:00"/>
+        </Storyboard>
+    </Window.Resources>
 
-        <TextBlock Text="Username:"/>
-        <TextBox x:Name="UsernameBox" Grid.Row="1" Margin="0,5,0,10"/>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource RotateTest}"/>
+        </EventTrigger>
+    </Window.Triggers>
 
-        <TextBlock Text="Password:" Grid.Row="2"/>
-        <PasswordBox x:Name="PasswordBox" Grid.Row="3" Margin="0,5,0,10"/>
+    <Grid Margin="0,0,0,-16">
+        <Image Source="/slika.png"
+       Stretch="UniformToFill"
+       Opacity="1"
+       HorizontalAlignment="Center"
+       VerticalAlignment="Top"
+       Width="47"
+       Height="48"
+       Panel.ZIndex="-1" Margin="0,82,0,0">
+            <Image.Style>
+                <Style/>
+            </Image.Style>
+        </Image>
 
-        <Button Content="Login" Grid.Row="4" HorizontalAlignment="Right" Width="80" Click="LoginButton_Click"/>
+
+        <!-- Trouglovi sa ZIndex=0 -->
+        <Path Stroke="LightBlue" StrokeThickness="5" Fill="LightBlue" Opacity="0.3"
+              Data="M 10,10 L 150,10 L 10,150 Z"
+              HorizontalAlignment="Left" VerticalAlignment="Top" Height="200" Stretch="Fill" Width="150" Margin="20"
+              RenderTransformOrigin="0.5,0.5"
+              Panel.ZIndex="0">
+            <Path.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform x:Name="RotateTransform1" Angle="12.364"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Path.RenderTransform>
+            <Path.Triggers>
+                <EventTrigger RoutedEvent="Path.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard RepeatBehavior="Forever">
+                            <DoubleAnimation Storyboard.TargetName="RotateTransform1"
+                                             Storyboard.TargetProperty="Angle"
+                                             From="0" To="360" Duration="0:2:0" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Path.Triggers>
+        </Path>
+
+        <Path Stroke="LightBlue" StrokeThickness="5" Fill="LightBlue" Opacity="0.3"
+              Data="M 10,10 L 1500,10 L 10,150 Z"
+              HorizontalAlignment="Right" VerticalAlignment="Bottom"
+              Height="220" Stretch="Fill" Width="160" Margin="0,0,52,0"
+              RenderTransformOrigin="0.5,0.5"
+              Panel.ZIndex="0">
+            <Path.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform x:Name="RotateTransform2" Angle="116.41"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Path.RenderTransform>
+            <Path.Triggers>
+                <EventTrigger RoutedEvent="Path.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard RepeatBehavior="Forever">
+                            <DoubleAnimation Storyboard.TargetName="RotateTransform2"
+                                             Storyboard.TargetProperty="Angle"
+                                             From="177" To="537"
+                                             Duration="0:2:0" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Path.Triggers>
+        </Path>
+
+        <!-- Glavni Grid sa formom sa ZIndex=1 -->
+        <Grid Panel.ZIndex="1" VerticalAlignment="Top" HorizontalAlignment="Center" Width="250" Margin="0,30,0,0" Height="254">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Welcome Texts -->
+            <TextBlock Text="Welcome"
+                       FontSize="12"
+                       FontFamily="Consolas"
+                       FontWeight="Normal"
+                       HorizontalAlignment="Center"
+                       Margin="0,-5,0,10"
+                       Grid.Row="0"/>
+            <TextBlock Text="Lager i Po"
+                       FontSize="28"
+                       FontFamily="Consolas"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="0,10,0,29" Grid.RowSpan="2"/>
+
+            <!-- Username -->
+            <TextBlock Text="Username:" FontFamily="Consolas" Grid.Row="6" Margin="0,41,0,31"/>
+            <TextBox x:Name="UsernameBox" Margin="0,55,0,6" Height="25" Grid.Row="6"/>
+
+            <!-- Password -->
+            <TextBlock Text="Password:" FontFamily="Consolas" Grid.Row="6" Margin="0,82,0,-29"/>
+            <PasswordBox x:Name="PasswordBox" Margin="0,98,0,-37" Height="25" Grid.Row="6"/>
+
+            <!-- Login Button -->
+            <Button Content="Login" Width="120" Height="35" Background="LightBlue" Foreground="Black"
+                    FontFamily="Consolas" FontWeight="Bold"
+                    Click="LoginButton_Click" Grid.Row="6" Margin="65,160,65,-109">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="1" ScaleY="1" />
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)"
+                                                            To="DeepSkyBlue" Duration="0:0:0.3" />
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                             To="1.1" Duration="0:0:0.3" />
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                             To="1.1" Duration="0:0:0.3" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)"
+                                                            To="LightBlue" Duration="0:0:0.3" />
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                             To="1" Duration="0:0:0.3" />
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                             To="1" Duration="0:0:0.3" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
     </Grid>
 </Window>

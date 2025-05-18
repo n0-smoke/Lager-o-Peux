@@ -3,42 +3,161 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Edit Shipment" Height="300" Width="400"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
-        <!-- Truck ID -->
-        <Label Content="Truck ID:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-        <TextBox x:Name="TruckIdBox" Grid.Row="0" Grid.Column="1" Margin="10,5"/>
+    <!-- Background Rotation Resource -->
+    <Window.Resources>
+        <Storyboard x:Key="RotateBackground2" RepeatBehavior="Forever">
+            <DoubleAnimation
+                Storyboard.TargetName="RotateTransform2"
+                Storyboard.TargetProperty="Angle"
+                From="177" To="537"
+                Duration="0:2:00"/>
+        </Storyboard>
+    </Window.Resources>
 
-        <!-- Destination -->
-        <Label Content="Destination:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-        <TextBox x:Name="DestinationBox" Grid.Row="1" Grid.Column="1" Margin="10,5"/>
+    <!-- Background Rotation Trigger -->
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource RotateBackground2}"/>
+        </EventTrigger>
+    </Window.Triggers>
 
-        <!-- Load Capacity -->
-        <Label Content="Load Capacity:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-        <TextBox x:Name="CapacityBox" Grid.Row="2" Grid.Column="1" Margin="10,5"/>
+    <Grid>
+        <!-- Background Design -->
+        <Canvas Panel.ZIndex="0">
+            <Path Stroke="LightBlue" StrokeThickness="5" Fill="LightBlue" Opacity="0.3"
+                  Data="M 10,10 L 150,10 L 10,150 Z"
+                  Height="200" Width="150" Margin="20"
+                  RenderTransformOrigin="0.5,0.5">
+                <Path.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform x:Name="RotateTransform1" Angle="12.364"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Path.RenderTransform>
+                <Path.Triggers>
+                    <EventTrigger RoutedEvent="Path.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard RepeatBehavior="Forever">
+                                <DoubleAnimation Storyboard.TargetName="RotateTransform1"
+                                                 Storyboard.TargetProperty="Angle"
+                                                 From="0" To="360"
+                                                 Duration="0:2:0"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Path.Triggers>
+            </Path>
 
-        <!-- Status -->
-        <Label Content="Status:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-        <ComboBox x:Name="StatusBox" Grid.Row="3" Grid.Column="1" Margin="10,5">
-            <ComboBoxItem Content="Pending"/>
-            <ComboBoxItem Content="In Transit"/>
-            <ComboBoxItem Content="Delivered"/>
-        </ComboBox>
+            <Path Stroke="LightBlue" StrokeThickness="5" Fill="LightBlue" Opacity="0.3"
+                  Data="M 10,10 L 1500,10 L 10,150 Z"
+                  Height="93" Width="194"
+                  HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                  RenderTransformOrigin="0.5,0.5" Canvas.Left="223.137" Stretch="Fill" Canvas.Top="118.908">
+                <Path.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="-1"/>
+                        <SkewTransform/>
+                        <RotateTransform x:Name="RotateTransform2" Angle="272.709"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Path.RenderTransform>
+                <Path.Triggers>
+                    <EventTrigger RoutedEvent="Path.Loaded">
+                        <BeginStoryboard>
+                            <Storyboard RepeatBehavior="Forever">
+                                <DoubleAnimation Storyboard.TargetName="RotateTransform2"
+                                                 Storyboard.TargetProperty="Angle"
+                                                 From="177" To="537"
+                                                 Duration="0:2:0"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Path.Triggers>
+            </Path>
+        </Canvas>
 
-        <!-- Save Button -->
-        <Button Content="Save" Grid.Row="4" Grid.Column="1" Width="80"
-                HorizontalAlignment="Right" Margin="10,15,0,0"
-                Click="Save_Click"/>
+        <!-- Foreground Form -->
+        <Grid Margin="20" Panel.ZIndex="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Truck ID -->
+            <Label Content="Truck ID:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+            <TextBox x:Name="TruckIdBox" Grid.Row="0" Grid.Column="1" Margin="10,5"/>
+
+            <!-- Destination -->
+            <Label Content="Destination:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+            <TextBox x:Name="DestinationBox" Grid.Row="1" Grid.Column="1" Margin="10,5"/>
+
+            <!-- Load Capacity -->
+            <Label Content="Load Capacity:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+            <TextBox x:Name="CapacityBox" Grid.Row="2" Grid.Column="1" Margin="10,5"/>
+
+            <!-- Status -->
+            <Label Content="Status:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+            <ComboBox x:Name="StatusBox" Grid.Row="3" Grid.Column="1" Margin="10,5">
+                <ComboBoxItem Content="Pending"/>
+                <ComboBoxItem Content="In Transit"/>
+                <ComboBoxItem Content="Delivered"/>
+            </ComboBox>
+
+            <!-- Save Button -->
+            <Button Content="Save" Grid.Row="4" Grid.Column="1" Width="100" Height="35"
+                    HorizontalAlignment="Right" Margin="0,42,130,-27"
+                    Click="Save_Click" Background="LightBlue" Foreground="Black"
+                    FontFamily="Consolas" FontWeight="Bold">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)"
+                                                            To="DeepSkyBlue" Duration="0:0:0.3"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                             To="1.1" Duration="0:0:0.3"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                             To="1.1" Duration="0:0:0.3"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)"
+                                                            To="LightBlue" Duration="0:0:0.3"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                             To="1" Duration="0:0:0.3"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                             To="1" Duration="0:0:0.3"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
     </Grid>
 </Window>

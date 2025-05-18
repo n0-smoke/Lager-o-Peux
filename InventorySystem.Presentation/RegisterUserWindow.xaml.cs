@@ -54,5 +54,10 @@ namespace InventorySystem.Presentation
             this.DialogResult = true;
             this.Close();
         }
+
+        private void RoleBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

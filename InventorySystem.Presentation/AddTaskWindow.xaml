@@ -3,50 +3,142 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Add Task" Height="400" Width="450"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+    <!-- Resources for Rotation -->
+    <Window.Resources>
+        <Storyboard x:Key="RotateBackground3" RepeatBehavior="Forever">
+            <DoubleAnimation Storyboard.TargetName="RotateTransform3"
+                             Storyboard.TargetProperty="Angle"
+                             From="0" To="360" Duration="0:2:00"/>
+        </Storyboard>
+    </Window.Resources>
 
-        <!-- Title -->
-        <Label Content="Title:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-        <TextBox x:Name="TitleBox" Grid.Row="0" Grid.Column="1" Margin="10,5"/>
+    <!-- Trigger for Background Rotation -->
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource RotateBackground3}"/>
+        </EventTrigger>
+    </Window.Triggers>
 
-        <!-- Description -->
-        <Label Content="Description:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-        <TextBox x:Name="DescriptionBox" Grid.Row="1" Grid.Column="1" Margin="10,5" Height="60"
-                 AcceptsReturn="True" TextWrapping="Wrap"/>
+    <Grid>
+        <!-- Animated Background -->
+        <Canvas Panel.ZIndex="0">
+            <Path Stroke="LightBlue" StrokeThickness="5" Fill="LightBlue" Opacity="0.3"
+                  Data="M 10,10 L 150,10 L 10,150 Z"
+                  Height="200" Width="150" Margin="20"
+                  RenderTransformOrigin="0.5,0.5">
+                <Path.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform x:Name="RotateTransform3" Angle="12"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Path.RenderTransform>
+            </Path>
 
-        <!-- Due Date -->
-        <Label Content="Due Date:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-        <DatePicker x:Name="DueDatePicker" Grid.Row="2" Grid.Column="1" Margin="10,5"/>
+            <Path Stroke="LightBlue" StrokeThickness="5" Fill="LightBlue" Opacity="0.3"
+                  Data="M 10,10 L 1500,10 L 10,150 Z"
+                  Height="121" Width="210"
+                  RenderTransformOrigin="0.5,0.5"
+                  Canvas.Left="217.224" Canvas.Top="209.645" Stretch="Fill">
+                <Path.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="-1" ScaleX="-1"/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="305.498"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Path.RenderTransform>
+            </Path>
+        </Canvas>
 
-        <!-- Status -->
-        <Label Content="Status:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-        <ComboBox x:Name="StatusBox" Grid.Row="3" Grid.Column="1" Margin="10,5">
-            <ComboBoxItem Content="Pending" IsSelected="True"/>
-            <ComboBoxItem Content="In Progress"/>
-            <ComboBoxItem Content="Completed"/>
-        </ComboBox>
+        <!-- Content Form -->
+        <Grid Margin="20" Panel.ZIndex="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <!-- Assigned User -->
-        <Label Content="Assign To:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
-        <ComboBox x:Name="UserBox" Grid.Row="4" Grid.Column="1" Margin="10,5"
-                  DisplayMemberPath="Username" SelectedValuePath="Id"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <!-- Save Button -->
-        <Button Content="Add" Grid.Row="5" Grid.Column="1" Width="80"
-                HorizontalAlignment="Right" Margin="10,15,0,0"
-                Click="Add_Click"/>
+            <!-- Title -->
+            <Label Content="Title:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+            <TextBox x:Name="TitleBox" Grid.Row="0" Grid.Column="1" Margin="10,5"/>
+
+            <!-- Description -->
+            <Label Content="Description:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+            <TextBox x:Name="DescriptionBox" Grid.Row="1" Grid.Column="1" Margin="10,5" Height="60"
+                     AcceptsReturn="True" TextWrapping="Wrap"/>
+
+            <!-- Due Date -->
+            <Label Content="Due Date:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+            <DatePicker x:Name="DueDatePicker" Grid.Row="2" Grid.Column="1" Margin="10,5"/>
+
+            <!-- Status -->
+            <Label Content="Status:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+            <ComboBox x:Name="StatusBox" Grid.Row="3" Grid.Column="1" Margin="10,5">
+                <ComboBoxItem Content="Pending" IsSelected="True"/>
+                <ComboBoxItem Content="In Progress"/>
+                <ComboBoxItem Content="Completed"/>
+            </ComboBox>
+
+            <!-- Assigned User -->
+            <Label Content="Assign To:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+            <ComboBox x:Name="UserBox" Grid.Row="4" Grid.Column="1" Margin="10,5"
+                      DisplayMemberPath="Username" SelectedValuePath="Id"/>
+
+            <!-- Add Button -->
+            <Button Content="Add" Grid.Row="5" Grid.Column="1" Width="100" Height="35"
+                    HorizontalAlignment="Right" Margin="0,54,155,-39"
+                    Click="Add_Click" Background="LightBlue" Foreground="Black"
+                    FontFamily="Consolas" FontWeight="Bold">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="1" ScaleY="1"/>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)"
+                                                            To="DeepSkyBlue" Duration="0:0:0.3"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                             To="1.1" Duration="0:0:0.3"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                             To="1.1" Duration="0:0:0.3"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)"
+                                                            To="LightBlue" Duration="0:0:0.3"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                             To="1" Duration="0:0:0.3"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                             To="1" Duration="0:0:0.3"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
     </Grid>
 </Window>

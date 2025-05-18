@@ -3,31 +3,134 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Inventory Management" Height="400" Width="600"
         WindowStartupLocation="CenterScreen">
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
 
-        <TextBlock Text="Inventory Items" FontSize="18" FontWeight="Bold" />
+    <!-- Resources -->
+    <Window.Resources>
+        <Storyboard x:Key="RotateBackgroundInventory" RepeatBehavior="Forever">
+            <DoubleAnimation Storyboard.TargetName="RotateTransformInventory"
+                             Storyboard.TargetProperty="Angle"
+                             From="0" To="360" Duration="0:2:00"/>
+        </Storyboard>
+    </Window.Resources>
 
-        <!-- Inventory Table -->
-        <DataGrid x:Name="InventoryGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
-                <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="*"/>
-                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="Auto"/>
-                <DataGridTextColumn Header="Supplier" Binding="{Binding Supplier}" Width="*"/>
-            </DataGrid.Columns>
-        </DataGrid>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource RotateBackgroundInventory}"/>
+        </EventTrigger>
+    </Window.Triggers>
 
-        <!-- Action Buttons -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Content="Add" Click="Add_Click" Margin="0,0,10,0"/>
-            <Button Content="Edit" Click="Edit_Click" Margin="0,0,10,0"/>
-            <Button Content="Delete" Click="Delete_Click"/>
-        </StackPanel>
+    <Grid>
+
+        <!-- Animated Background -->
+        <Canvas Panel.ZIndex="0">
+            <Path Stroke="LightBlue" StrokeThickness="5" Fill="LightBlue" Opacity="0.3"
+                  Data="M 10,10 L 150,10 L 10,150 Z"
+                  Height="180" Width="150" Margin="20"
+                  RenderTransformOrigin="0.5,0.5">
+                <Path.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform x:Name="RotateTransformInventory" Angle="12"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Path.RenderTransform>
+            </Path>
+
+            <Path Stroke="LightBlue" StrokeThickness="5" Fill="LightBlue" Opacity="0.3"
+                  Data="M 10,10 L 1500,10 L 10,150 Z"
+                  Height="184" Width="478"
+                  RenderTransformOrigin="0.5,0.5"
+                  Canvas.Left="128.365" Canvas.Top="89.118" Stretch="Fill">
+                <Path.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="-1" ScaleX="-1"/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="330.296"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Path.RenderTransform>
+            </Path>
+        </Canvas>
+
+        <!-- Main UI -->
+        <Grid Margin="10" Panel.ZIndex="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <TextBlock Text="Inventory Items" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <!-- Inventory Table -->
+            <DataGrid x:Name="InventoryGrid"
+                      Grid.Row="1"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      IsReadOnly="True"
+                      Margin="0,0,0,10">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                    <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="*"/>
+                    <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="Auto"/>
+                    <DataGridTextColumn Header="Supplier" Binding="{Binding Supplier}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Action Buttons -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Add" Click="Add_Click" Margin="0,0,10,0" Width="80" Height="30"
+                        Background="LightBlue" Foreground="Black" FontFamily="Consolas" FontWeight="Bold">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                            <Setter Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)"
+                                                                To="DeepSkyBlue" Duration="0:0:0.3"/>
+                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                                 To="1.1" Duration="0:0:0.3"/>
+                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                                 To="1.1" Duration="0:0:0.3"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetProperty="(Control.Background).(SolidColorBrush.Color)"
+                                                                To="LightBlue" Duration="0:0:0.3"/>
+                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleX"
+                                                                 To="1" Duration="0:0:0.3"/>
+                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.ScaleY"
+                                                                 To="1" Duration="0:0:0.3"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button Content="Edit" Click="Edit_Click" Margin="0,0,10,0" Width="80" Height="30"
+                        Background="LightBlue" Foreground="Black" FontFamily="Consolas" FontWeight="Bold"
+                        Style="{StaticResource {x:Type Button}}"/>
+
+                <Button Content="Delete" Click="Delete_Click" Width="80" Height="30"
+                        Background="LightBlue" Foreground="Black" FontFamily="Consolas" FontWeight="Bold"
+                        Style="{StaticResource {x:Type Button}}"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>
-

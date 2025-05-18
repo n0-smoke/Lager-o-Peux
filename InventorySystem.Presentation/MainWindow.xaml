@@ -1,27 +1,232 @@
-﻿<Window x:Class="InventorySystem.Presentation.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Dashboard" Height="300" Width="400"
-        WindowStartupLocation="CenterScreen">
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        xmlns:av="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        mc:Ignorable="av" 
+        x:Class="InventorySystem.Presentation.MainWindow"
+        Title="Dashboard"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        WindowState="Maximized"
+        ResizeMode="NoResize" 
+        av:DesignHeight="1080" 
+        av:DesignWidth="1920">
 
-        <!-- Welcome Header -->
-        <TextBlock x:Name="WelcomeText"
-                   FontSize="16"
-                   FontWeight="Bold"
-                   Margin="0,0,0,20" />
+    <Window.Resources>
+        <Storyboard x:Key="RotateTest" RepeatBehavior="Forever">
+            <DoubleAnimation
+                Storyboard.TargetName="RotateTransform2"
+                Storyboard.TargetProperty="Angle"
+                From="177" To="537"
+                Duration="0:2:00"/>
+        </Storyboard>
+        <Storyboard x:Key="WelcomeSequence" RepeatBehavior="Forever">
+            <!-- Welcome -->
+            <ColorAnimation Storyboard.TargetName="WelcomeWord"
+                    Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
+                    From="Black" To="LightBlue"
+                    Duration="0:0:0.5" AutoReverse="True" BeginTime="0:0:0"/>
+            <!-- to -->
+            <ColorAnimation Storyboard.TargetName="ToWord"
+                    Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
+                    From="Black" To="LightBlue"
+                    Duration="0:0:0.5" AutoReverse="True" BeginTime="0:0:1"/>
+            <!-- Lager Ipo! -->
+            <ColorAnimation Storyboard.TargetName="LagerWord"
+                    Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
+                    From="Black" To="LightBlue"
+                    Duration="0:0:0.5" AutoReverse="True" BeginTime="0:0:2"/>
+        </Storyboard>
 
-        <!-- Service Buttons -->
-        <StackPanel Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" Orientation="Vertical" Width="200">
-            <Button Content="Inventory Management" Click="OpenInventory_Click" Margin="0,0,0,10"/>
-            <Button Content="Shipment Management" Click="OpenShipment_Click" Margin="0,0,0,10"/>
-            <Button Content="Task Assignment" Click="OpenTasks_Click" Margin="0,0,0,10"/>
-            <Button Content="Analytics Dashboard" Click="OpenAnalytics_Click"/>
-            <Button Content="Register New User" Click="RegisterUser_Click" Margin="0,10,0,0"/>
-        </StackPanel>
-    </Grid>
+
+
+
+        <Style TargetType="Button">
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(Button.RenderTransform).(ScaleTransform.ScaleX)"
+                                                 To="1.1" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(Button.RenderTransform).(ScaleTransform.ScaleY)"
+                                                 To="1.1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(Button.RenderTransform).(ScaleTransform.ScaleX)"
+                                                 To="1" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(Button.RenderTransform).(ScaleTransform.ScaleY)"
+                                                 To="1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource RotateTest}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource RotateTest}"/>
+            <BeginStoryboard Storyboard="{StaticResource WelcomeSequence}"/>
+        </EventTrigger>
+    </Window.Triggers>
+
+    <Viewbox Stretch="Fill">
+        <Grid Width="1920" Height="1080">
+            <Border x:Name="TargetArea"
+                    Margin="696,242,55,95"
+                    Background="Transparent"
+                    BorderBrush="LightBlue"
+                    BorderThickness="3"
+                    RenderTransformOrigin="0.5,0.5"/>
+
+            <StackPanel x:Name="WelcomeStack"
+            Orientation="Vertical"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Margin="0,44,0,0"
+            Width="1192" Height="193" RenderTransformOrigin="0.497,0.436">
+                <TextBlock x:Name="WelcomeWord"
+               Text="Welcome"
+               FontSize="30"
+               Foreground="black"
+               FontWeight="Normal"
+               HorizontalAlignment="Center"/>
+                <TextBlock x:Name="ToWord"
+               Text="To"
+               FontSize="30"
+               Foreground="black"
+               FontWeight="Normal"
+               HorizontalAlignment="Center"/>
+                <TextBlock x:Name="LagerWord"
+               Text="Lager Ipo!"
+               FontSize="50"
+               Foreground="Black"
+               FontWeight="Bold"
+               HorizontalAlignment="Center"
+               />
+            </StackPanel>
+
+            <TextBlock x:Name="WelcomeText"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       Foreground="Black"
+                       Text="Welcome!"
+                       Margin="10,10,1600,949"/>
+
+
+            <Image Source="/LogoLagerIPo.png"
+           Opacity="1"
+           Canvas.Left="400"
+           Canvas.Top="100"
+           Stretch="UniformToFill" Margin="961,346,320,325"/>
+
+            <!-- Rotating Paths -->
+            <Canvas Panel.ZIndex="0">
+                <Path Stroke="LightBlue" StrokeThickness="5" Fill="LightBlue" Opacity="0.3"
+                      Data="M 10,10 L 150,10 L 10,150 Z"
+                      Height="730" Width="988"
+                      RenderTransformOrigin="0.5,0.5"
+                      HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="-79.173" Canvas.Top="244.777" Stretch="Fill">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform x:Name="RotateTransform1" Angle="49.754"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+
+                    <Path.Triggers>
+                        <EventTrigger RoutedEvent="Path.Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetName="RotateTransform1"
+                                                     Storyboard.TargetProperty="Angle"
+                                                     From="0" To="360"
+                                                     Duration="0:1:0"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Path.Triggers>
+                </Path>
+
+                <Path Stroke="LightBlue" StrokeThickness="5" Fill="LightBlue" Opacity="0.3"
+                      Data="M 10,10 L 1500,10 L 10,150 Z"
+                      Height="741" Width="794"
+                      RenderTransformOrigin="0.5,0.5"
+                      HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="988.196" Stretch="Fill" Canvas.Top="252.171">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform x:Name="RotateTransform2" Angle="151.149"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+
+                    <Path.Triggers>
+                        <EventTrigger RoutedEvent="Path.Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetName="RotateTransform2"
+                                                     Storyboard.TargetProperty="Angle"
+                                                     From="177" To="537"
+                                                     Duration="0:2:0"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Path.Triggers>
+                </Path>
+            </Canvas>
+
+            <!-- Buttons on top -->
+            <Canvas Panel.ZIndex="1">
+                <Button Content="Inventory Management" Width="514" Height="67" FontSize="30"
+                        Background="LightBlue" Foreground="Black"
+                        FontFamily="Consolas" FontWeight="Bold"
+                        Click="OpenInventory_Click"
+                        HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="127" Canvas.Top="346"/>
+
+                <Button Content="Task Assignment" Width="514" Height="67" FontSize="30"
+                        Background="LightBlue" Foreground="Black"
+                        FontFamily="Consolas" FontWeight="Bold"
+                        Click="OpenTasks_Click"
+                        HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="127" Canvas.Top="463"/>
+
+                <Button Content="Analitics Dashbord" Width="514" Height="67" FontSize="30"
+                        Background="LightBlue" Foreground="Black"
+                        FontFamily="Consolas" FontWeight="Bold"
+                        Click="OpenAnalytics_Click"
+                        HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="127" Canvas.Top="576"/>
+
+                <Button Content="Task Management" Width="514" Height="68" FontSize="30"
+                        Background="LightBlue" Foreground="Black"
+                        FontFamily="Consolas" FontWeight="Bold"
+                        Click="OpenShipment_Click"
+                        HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="127" Canvas.Top="684"/>
+
+                <Button Content="Register New User" Width="514" Height="67" FontSize="30"
+                        Background="LightBlue" Foreground="Black"
+                        FontFamily="Consolas" FontWeight="Bold"
+                        Click="RegisterUser_Click"
+                        HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="127" Canvas.Top="796"/>
+            </Canvas>
+        </Grid>
+    </Viewbox>
 </Window>
