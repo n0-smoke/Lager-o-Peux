@@ -3,6 +3,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Diagnostics;
+using System.IO;
+using Microsoft.Win32;
 using InventorySystem.Domain.Models;
 using InventorySystem.Infrastructure.Context;
 using InventorySystem.Infrastructure.Services;
@@ -13,6 +16,7 @@ namespace InventorySystem.Presentation
     public partial class EditShipmentWindow : Window
     {
         private readonly ShipmentService _shipmentService;
+        private readonly ReportService _reportService;
         private readonly AppDbContext _context;
         private readonly Shipment _shipment;
 
@@ -26,6 +30,7 @@ namespace InventorySystem.Presentation
 
             _context = new AppDbContext(optionsBuilder.Options);
             _shipmentService = new ShipmentService(_context);
+            _reportService = new ReportService(_context, _shipmentService);
 
             LoadTrucks();
             LoadShipmentItems();
@@ -138,37 +143,96 @@ namespace InventorySystem.Presentation
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            if (TruckComboBox.SelectedItem is not Truck selectedTruck)
+            try
             {
-                MessageBox.Show("Please select a truck.");
-                return;
-            }
+                // Update shipment properties
+                _shipment.Destination = DestinationBox.Text;
+                _shipment.TruckId = (int)TruckComboBox.SelectedValue;
+                _shipment.Status = ((ComboBoxItem)StatusBox.SelectedItem).Content.ToString();
 
-            _shipment.TruckId = selectedTruck.Id;
-            _shipment.Truck = selectedTruck; // Ensure truck reference is set
-            _shipment.Destination = DestinationBox.Text;
-            _shipment.Status = ((ComboBoxItem)StatusBox.SelectedItem)?.Content?.ToString() ?? "Pending";
-
-            // Validate truck capacity
-            if (!_shipmentService.IsWithinTruckCapacity(_shipment))
-            {
-                var result = MessageBox.Show(
-                    "Warning: This shipment exceeds the truck's capacity. Do you want to continue anyway?",
-                    "Capacity Exceeded",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);
+                // Calculate load percentage
+                double loadPercentage = _shipmentService.CalculateLoadPercentage(_shipment);
                 
-                if (result == MessageBoxResult.No)
+                // Validate truck capacity
+                if (loadPercentage > 100)
                 {
-                    return; // Don't save if user cancels
+                    MessageBoxResult result = MessageBox.Show(
+                        "Warning: This shipment exceeds the truck's capacity. Do you want to save anyway?",
+                        "Capacity Warning",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Warning);
+                    
+                    if (result == MessageBoxResult.No)
+                    {
+                        return;
+                    }
+                }
+
+                // Save shipment
+                _shipmentService.UpdateShipment(_shipment);
+                
+                MessageBox.Show("Shipment saved successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                DialogResult = true;
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving shipment: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        
+        private void GenerateReport_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Make sure the shipment is saved first
+                if (_shipment.Id == 0)
+                {
+                    MessageBox.Show("Please save the shipment before generating a report.", 
+                        "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+                
+                // Show save file dialog to select where to save the PDF
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "PDF Files (*.pdf)|*.pdf",
+                    Title = "Save Shipment Report",
+                    FileName = $"Shipment_{_shipment.Id}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf",
+                    DefaultExt = "pdf"
+                };
+                
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    string outputPath = Path.GetDirectoryName(saveFileDialog.FileName);
+                    string fileName = Path.GetFileName(saveFileDialog.FileName);
+                    
+                    // Generate the report
+                    string reportPath = _reportService.GenerateShipmentReport(_shipment.Id, outputPath, "Admin");
+                    
+                    MessageBox.Show($"Report generated successfully and saved to:\n{reportPath}", 
+                        "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    
+                    // Ask if the user wants to open the report
+                    MessageBoxResult result = MessageBox.Show("Do you want to open the report now?", 
+                        "Open Report", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        // Open the report with the default PDF viewer
+                        Process.Start(new ProcessStartInfo
+                        {
+                            FileName = reportPath,
+                            UseShellExecute = true
+                        });
+                    }
                 }
             }
-
-            _shipmentService.UpdateShipment(_shipment);
-
-            MessageBox.Show("Shipment updated successfully.");
-            this.DialogResult = true;
-            this.Close();
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error generating report: {ex.Message}", 
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

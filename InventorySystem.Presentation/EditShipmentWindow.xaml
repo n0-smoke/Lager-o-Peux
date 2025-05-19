@@ -91,9 +91,10 @@
                        Margin="5,5,5,0"/>
         </Grid>
         
-        <!-- Save Button -->
-        <Button Content="Save" Grid.Row="7" Grid.Column="1" Width="80"
-                HorizontalAlignment="Right" Margin="10,15,0,0"
-                Click="Save_Click"/>
+        <!-- Save and Generate Report Buttons -->
+        <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button Content="Generate Report" Width="120" Margin="0,0,10,0" Click="GenerateReport_Click"/>
+            <Button Content="Save" Width="80" Click="Save_Click"/>
+        </StackPanel>
     </Grid>
 </Window>
