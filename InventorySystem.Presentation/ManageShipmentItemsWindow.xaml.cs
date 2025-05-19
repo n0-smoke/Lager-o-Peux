@@ -116,6 +116,9 @@ namespace InventorySystem.Presentation
                 _shipmentItems.Add(shipmentItem);
             }
 
+            // Update the shipment's items collection for calculation
+            _shipment.ShipmentItems = new List<ShipmentInventoryItem>(_shipmentItems);
+            
             // Update the UI
             ShipmentItemsGrid.ItemsSource = null;
             ShipmentItemsGrid.ItemsSource = _shipmentItems;
@@ -132,6 +135,9 @@ namespace InventorySystem.Presentation
             {
                 _shipmentItems.Remove(shipmentItem);
                 
+                // Update the shipment's items collection for calculation
+                _shipment.ShipmentItems = new List<ShipmentInventoryItem>(_shipmentItems);
+                
                 // Update the UI
                 ShipmentItemsGrid.ItemsSource = null;
                 ShipmentItemsGrid.ItemsSource = _shipmentItems;
@@ -146,17 +152,12 @@ namespace InventorySystem.Presentation
             if (_shipment.Truck == null)
             {
                 var truck = _context.Trucks.Find(_shipment.TruckId);
-                if (truck == null)
-                {
-                    LoadPercentageText.Text = "0%";
-                    LoadProgressBar.Value = 0;
-                    return;
-                }
+                if (truck == null) return;
                 _shipment.Truck = truck;
             }
 
-            // Update the shipment's items collection for calculation
-            _shipment.ShipmentItems = _shipmentItems;
+            // Create a new list to ensure we're not using a reference that might be cached
+            _shipment.ShipmentItems = new List<ShipmentInventoryItem>(_shipmentItems);
             
             // Calculate load percentage
             double loadPercentage = _shipmentService.CalculateLoadPercentage(_shipment);
@@ -185,6 +186,9 @@ namespace InventorySystem.Presentation
 
         private void SaveChanges_Click(object sender, RoutedEventArgs e)
         {
+            // Ensure we're using the latest items list
+            _shipment.ShipmentItems = new List<ShipmentInventoryItem>(_shipmentItems);
+            
             // Validate truck capacity
             if (!_shipmentService.IsWithinTruckCapacity(_shipment))
             {
@@ -200,28 +204,34 @@ namespace InventorySystem.Presentation
                 }
             }
 
-            // Update the shipment's items collection
-            _shipment.ShipmentItems = _shipmentItems;
-            
             // For new shipments, the calling window will handle saving
             // For existing shipments, save the changes here
             if (!_isNewShipment)
             {
-                // First remove existing items
-                var existingItems = _context.ShipmentInventoryItems
-                    .Where(si => si.ShipmentId == _shipment.Id)
-                    .ToList();
-                
-                _context.ShipmentInventoryItems.RemoveRange(existingItems);
-                
-                // Then add the current items
-                foreach (var item in _shipmentItems)
+                try
                 {
-                    item.ShipmentId = _shipment.Id;
-                    _context.ShipmentInventoryItems.Add(item);
+                    // First remove existing items
+                    var existingItems = _context.ShipmentInventoryItems
+                        .Where(si => si.ShipmentId == _shipment.Id)
+                        .ToList();
+                    
+                    _context.ShipmentInventoryItems.RemoveRange(existingItems);
+                    _context.SaveChanges();
+                    
+                    // Then add the current items
+                    foreach (var item in _shipmentItems)
+                    {
+                        item.ShipmentId = _shipment.Id;
+                        _context.ShipmentInventoryItems.Add(item);
+                    }
+                    
+                    _context.SaveChanges();
                 }
-                
-                _context.SaveChanges();
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error saving shipment items: {ex.Message}");
+                    return;
+                }
             }
             
             this.DialogResult = true;
