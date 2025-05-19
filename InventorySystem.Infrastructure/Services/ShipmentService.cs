@@ -65,40 +65,55 @@ namespace InventorySystem.Infrastructure.Services
 
         public void UpdateShipment(Shipment shipment)
         {
-            // Avoid tracking conflicts by detaching any existing entity with the same ID
-            var existingShipment = _context.Shipments.Local.FirstOrDefault(s => s.Id == shipment.Id);
-            if (existingShipment != null)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                _context.Entry(existingShipment).State = EntityState.Detached;
-            }
-            
-            // Handle shipment items separately to avoid tracking conflicts
-            var shipmentItems = shipment.ShipmentItems?.ToList();
-            shipment.ShipmentItems = null;
-            
-            // Update the shipment
-            _context.Shipments.Update(shipment);
-            _context.SaveChanges();
-            
-            // Update shipment items if they exist
-            if (shipmentItems != null && shipmentItems.Any())
-            {
-                // Remove existing items
-                var existingItems = _context.ShipmentInventoryItems
-                    .Where(si => si.ShipmentId == shipment.Id)
-                    .ToList();
-                
-                _context.ShipmentInventoryItems.RemoveRange(existingItems);
-                _context.SaveChanges();
-                
-                // Add the new items
-                foreach (var item in shipmentItems)
+                try
                 {
-                    item.ShipmentId = shipment.Id;
-                    _context.ShipmentInventoryItems.Add(item);
+                    // Get a clean copy of the shipment without items
+                    var shipmentToUpdate = new Shipment
+                    {
+                        Id = shipment.Id,
+                        TruckId = shipment.TruckId,
+                        Destination = shipment.Destination,
+                        Direction = shipment.Direction,
+                        Status = shipment.Status,
+                        ScheduledDate = shipment.ScheduledDate
+                    };
+                    
+                    // Handle shipment items separately
+                    var shipmentItems = shipment.ShipmentItems?.ToList() ?? new List<ShipmentInventoryItem>();
+                    
+                    // Update the shipment
+                    _context.Entry(shipmentToUpdate).State = EntityState.Modified;
+                    _context.SaveChanges();
+                    
+                    // Remove all existing items for this shipment
+                    _context.ShipmentInventoryItems.RemoveRange(
+                        _context.ShipmentInventoryItems.Where(si => si.ShipmentId == shipment.Id));
+                    _context.SaveChanges();
+                    
+                    // Add the new items
+                    foreach (var item in shipmentItems)
+                    {
+                        // Create a clean item to avoid tracking issues
+                        var newItem = new ShipmentInventoryItem
+                        {
+                            ShipmentId = shipment.Id,
+                            InventoryItemId = item.InventoryItemId,
+                            Quantity = item.Quantity
+                        };
+                        
+                        _context.ShipmentInventoryItems.Add(newItem);
+                    }
+                    
+                    _context.SaveChanges();
+                    transaction.Commit();
                 }
-                
-                _context.SaveChanges();
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception($"Error updating shipment: {ex.Message}", ex);
+                }
             }
         }
 
@@ -120,21 +135,33 @@ namespace InventorySystem.Infrastructure.Services
 
         public double CalculateTotalWeight(Shipment shipment)
         {
-            // If ShipmentItems is null or empty, load it from the database
-            if (shipment.ShipmentItems == null || !shipment.ShipmentItems.Any())
+            // If ShipmentItems is null, initialize it as an empty list
+            if (shipment.ShipmentItems == null)
+            {
+                shipment.ShipmentItems = new List<ShipmentInventoryItem>();
+            }
+            
+            // If the list is explicitly empty (items were removed), return 0 immediately
+            if (!shipment.ShipmentItems.Any())
+            {
+                return 0;
+            }
+            
+            // For existing shipments with no items loaded yet, try to load from database
+            if (shipment.Id > 0 && shipment.ShipmentItems.Count == 0)
             {
                 var loadedShipment = _context.Shipments
                     .Include(s => s.ShipmentItems)
                     .ThenInclude(si => si.InventoryItem)
                     .FirstOrDefault(s => s.Id == shipment.Id);
 
-                if (loadedShipment != null)
+                if (loadedShipment != null && loadedShipment.ShipmentItems.Any())
                 {
                     shipment.ShipmentItems = loadedShipment.ShipmentItems;
                 }
                 else
                 {
-                    return 0; // No items or new shipment
+                    return 0; // No items found in database
                 }
             }
 

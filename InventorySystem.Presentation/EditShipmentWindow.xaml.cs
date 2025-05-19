@@ -88,8 +88,8 @@ namespace InventorySystem.Presentation
 
             if (result == true)
             {
-                // Reload shipment items
-                LoadShipmentItems();
+                // Update the UI directly with the shipment items from the manage window
+                ShipmentItemsGrid.ItemsSource = _shipment.ShipmentItems;
                 
                 // Update capacity display
                 UpdateCapacityDisplay();
