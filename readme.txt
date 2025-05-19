@@ -130,3 +130,35 @@ Update-Database -StartupProject InventorySystem.Presentation
 
 ✔ Users receive warnings when attempting to save overloaded shipments
   but can override if necessary
+
+------------------------------------------------------------
+9. Generate Shipment Report Feature
+------------------------------------------------------------
+
+✔ The system now generates detailed PDF reports for shipments:
+
+  • Reports include comprehensive shipment information:
+    - Shipment details (ID, destination, status, dates)
+    - Truck information (identifier, maximum capacity)
+    - Inventory items list with quantities and weights
+    - Total weight and load percentage calculations
+    - Color-coded load status indicators
+
+✔ PDF Generation Features:
+  • Professional layout with organized sections
+  • Color-coded load status (green/orange/red)
+  • Automatic date and user tracking
+  • Tabular format for inventory items
+  • Clean, readable typography
+
+✔ User Experience:
+  • Generate Report button in the Edit Shipment window
+  • Custom save location selection
+  • Option to automatically open the generated PDF
+  • Error handling for report generation
+
+✔ Technical Implementation:
+  • Uses QuestPDF library for reliable PDF generation
+  • Modular design through ReportService class
+  • Proper error handling and user feedback
+  • Flexible report file naming with timestamps
