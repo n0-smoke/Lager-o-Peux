@@ -1,10 +1,14 @@
-﻿<Window x:Class="InventorySystem.Presentation.EditShipmentWindow"
+<Window x:Class="InventorySystem.Presentation.EditShipmentWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Edit Shipment" Height="300" Width="400"
+        Title="Edit Shipment" Height="600" Width="650"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid Margin="20">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -34,8 +38,61 @@
             <ComboBoxItem Content="Delivered"/>
         </ComboBox>
 
+        <!-- Shipment Items Section -->
+        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,15,0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Shipment Items:" FontWeight="Bold" VerticalAlignment="Center"/>
+            <Button x:Name="ManageItemsButton" Grid.Column="1" Content="Manage Items" 
+                    Click="ManageItems_Click" Width="100" HorizontalAlignment="Right"/>
+        </Grid>
+        
+        <DataGrid x:Name="ShipmentItemsGrid" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                  Height="150" Margin="0,5,0,15" AutoGenerateColumns="False" 
+                  CanUserAddRows="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Item Name" Binding="{Binding InventoryItem.Name}" Width="*"/>
+                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="80"/>
+                <DataGridTextColumn Header="Weight Per Unit (kg)" Binding="{Binding InventoryItem.WeightPerUnit}" Width="120"/>
+                <DataGridTextColumn Header="Total Weight (kg)" Binding="{Binding TotalWeightKg}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        <!-- Truck Capacity Section -->
+        <Label Content="Truck Capacity:" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" 
+               FontWeight="Bold" Margin="0,5,0,5"/>
+               
+        <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Truck Load:" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,0,0,0">
+                    <TextBlock x:Name="LoadPercentageText" Text="0%" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <TextBlock Text=" of maximum capacity" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+            
+            <ProgressBar x:Name="LoadProgressBar" Grid.Row="1" Height="20" Margin="5,10,5,5" Maximum="100" Value="0"/>
+            
+            <TextBlock x:Name="CapacityWarningText" Grid.Row="2" Foreground="Red" 
+                       Visibility="Collapsed" TextWrapping="Wrap"
+                       Text="Warning: Shipment exceeds truck capacity. Please reduce the load or select a larger truck."
+                       Margin="5,5,5,0"/>
+        </Grid>
+        
         <!-- Save Button -->
-        <Button Content="Save" Grid.Row="3" Grid.Column="1" Width="80"
+        <Button Content="Save" Grid.Row="7" Grid.Column="1" Width="80"
                 HorizontalAlignment="Right" Margin="10,15,0,0"
                 Click="Save_Click"/>
     </Grid>

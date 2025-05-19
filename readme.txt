@@ -1,4 +1,4 @@
-﻿============================================================
+============================================================
 Inventory & Logistics Management System - Setup Guide (v1.0)
 ============================================================
 
@@ -108,3 +108,25 @@ Update-Database -StartupProject InventorySystem.Presentation
 • Passwords are hashed with BCrypt.Net
 
 • Projects auto-restore dependencies on build
+
+------------------------------------------------------------
+8. Shipment Load Validation
+------------------------------------------------------------
+
+✔ The system now validates shipment loads against truck capacity:
+
+  • Each inventory item has a weight per unit (kg)
+  • Each shipment's total weight is calculated based on items and quantities
+  • The system compares this weight against the truck's maximum capacity
+  • Visual feedback shows the current load percentage with color coding:
+    - Green: Below 90% capacity
+    - Orange: Between 90-100% capacity
+    - Red: Exceeding capacity (with warning message)
+
+✔ Capacity validation occurs when:
+  • Adding items to a shipment
+  • Saving a shipment
+  • Changing the assigned truck
+
+✔ Users receive warnings when attempting to save overloaded shipments
+  but can override if necessary
