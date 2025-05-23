@@ -195,7 +195,7 @@
                 </Path>
             </Canvas>
 
-            <!-- Buttons on top -->
+            <!--stara dugmad -->
             <Canvas Panel.ZIndex="1">
                 <Button Content="Inventory Management" Width="514" Height="67" FontSize="30"
                         Background="LightBlue" Foreground="Black"
@@ -226,6 +226,8 @@
                         FontFamily="Consolas" FontWeight="Bold"
                         Click="RegisterUser_Click"
                         HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="127" Canvas.Top="796"/>
+                <!--novo dugme za truck-->
+                <Button Content="Open Truck Manager" Click="OpenTruckMaintenanceWindow_Click" Canvas.Left="224" Canvas.Top="906" Height="83" Width="320" />
             </Canvas>
         </Grid>
     </Viewbox>

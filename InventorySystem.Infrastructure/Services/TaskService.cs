@@ -46,4 +46,3 @@ namespace InventorySystem.Infrastructure.Services
         }
     }
 }
-

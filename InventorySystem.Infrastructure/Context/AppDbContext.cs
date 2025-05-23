@@ -1,32 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using InventorySystem.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using InventorySystem.Domain.Models; // adjust to your actual model namespace
 
-namespace InventorySystem.Infrastructure.Context
+public class AppDbContext : DbContext
 {
-    public class AppDbContext : DbContext
+    public AppDbContext(DbContextOptions<AppDbContext> options)
+        : base(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options)
-        {
-        }
-
-        public DbSet<User> Users { get; set; }
-        public DbSet<InventoryItem> InventoryItems { get; set; }
-        public DbSet<Shipment> Shipments { get; set; }
-        public DbSet<TaskAssignment> TaskAssignments { get; set; }
-        public DbSet<InventoryTransaction> InventoryTransactions { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            // Optional: Add any Fluent API configurations here
-        }
     }
-}
 
+    public DbSet<User> Users { get; set; }
+    public DbSet<InventoryItem> InventoryItems { get; set; }
+    public DbSet<Shipment> Shipments { get; set; }
+    public DbSet<TaskAssignment> TaskAssignments { get; set; }
+    public DbSet<InventoryTransaction> InventoryTransactions { get; set; }
+
+    //extras for Truck
+    public DbSet<Truck> Trucks { get; set; }
+    public IEnumerable<object> TruckMaintenanceRecords { get; internal set; }
+
+    public DbSet<TruckMaintenanceRecord> TruckM;
+}

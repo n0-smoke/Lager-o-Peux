@@ -9,6 +9,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using InventorySystem.Presentation.Session;
+using InventorySystem.Infrastructure.Services;
+using InventorySystem.Presentation; 
+
+
 
 namespace InventorySystem.Presentation
 {
@@ -81,6 +85,19 @@ namespace InventorySystem.Presentation
             registerWindow.Height = 596;
             registerWindow.ShowDialog();
         }
+        //ovdje sam dodao za truck
+        private readonly TruckService _truckService = new();
+
+        
+        private void OpenTruckMaintenanceWindow_Click(object sender, RoutedEventArgs e)
+        {
+            var truckService = new TruckService(); // ili koristi već postojeći ako ga imaš
+            var window = new TruckMaintenanceWindow(truckService);
+            window.Show();
+
+        }
+
+
 
     }
 }

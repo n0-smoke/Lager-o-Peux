@@ -1,0 +1,35 @@
+﻿<Window x:Class="InventorySystem.Presentation.TruckMaintenanceWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Truck Maintenance" Height="500" Width="800">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Left" Margin="0,0,0,10">
+            <Button Content="Show All" Click="ShowAll_Click" Margin="5"/>
+            <Button Content="Show Ongoing Only" Click="ShowOngoing_Click" Margin="5"/>
+            <Button Content="Add Truck" Click="AddTruck_Click" Margin="5"/>
+            <Button Content="Update Truck Status" Click="UpdateTruckStatus_Click" Margin="5"/>
+            <Button Content="Add Maintenance" Click="AddMaintenance_Click" Margin="5"/>
+            <Button Content="View Records" Click="ViewRecords_Click" Margin="5"/>
+            <Button Content="Complete Maintenance" Click="CompleteMaintenance_Click" Margin="5"/>
+            <Button Content="Close" Click="Close_Click" Margin="5"/>
+        </StackPanel>
+
+        <DataGrid x:Name="TruckGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding TruckId}" Width="Auto"/>
+                <DataGridTextColumn Header="Model" Binding="{Binding Model}" Width="*"/>
+                <DataGridTextColumn Header="License Plate" Binding="{Binding LicensePlate}" Width="*"/>
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*"/>
+                <DataGridCheckBoxColumn Header="Under Maintenance" Binding="{Binding IsUnderMaintenance}" Width="Auto"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <TextBlock Grid.Row="2" x:Name="StatusTextBlock" Foreground="DarkGreen" Margin="5"/>
+    </Grid>
+</Window>
