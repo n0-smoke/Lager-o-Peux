@@ -3,6 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Ignore all PDF files
+*.pdf
+
+# Ignore all TXT files in root directory except readme.txt
+/*.txt
+!readme.txt
+
 # User-specific files
 *.rsuser
 *.suo
