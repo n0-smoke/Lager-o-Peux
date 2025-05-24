@@ -1,13 +1,29 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
+using Microsoft.EntityFrameworkCore;
+using InventorySystem.Infrastructure.Context;
+using InventorySystem.Infrastructure.Setup;
 
-namespace InventorySystem.Presentation;
-
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
-public partial class App : System.Windows.Application
+namespace InventorySystem.Presentation
 {
-}
+    public partial class App : System.Windows.Application
+    {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
 
+            // Set up EF Core DbContext
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            optionsBuilder.UseSqlServer("Server=localhost,1433;Database=InventoryDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True");
+
+            // Initialize + seed the database
+            using (var context = new AppDbContext(optionsBuilder.Options))
+            {
+                DbInitializer.Initialize(context);
+            }
+
+            // Launch MainWindow
+            var mainWindow = new MainWindow();
+            mainWindow.Show();
+        }
+    }
+}

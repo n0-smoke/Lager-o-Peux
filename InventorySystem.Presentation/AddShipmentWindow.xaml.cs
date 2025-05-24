@@ -1,8 +1,7 @@
-﻿using InventorySystem.Application.DTOs;
-using InventorySystem.Application.Services;
+﻿using InventorySystem.Domain.Models;
 using InventorySystem.Domain.Models;
 using InventorySystem.Infrastructure.Context;
-using InventorySystem.Infrastructure.Services;
+using InventorySystem.Presentation.Session;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,174 +14,127 @@ namespace InventorySystem.Presentation
     public partial class AddShipmentWindow : Window
     {
         private readonly AppDbContext _context;
-        private readonly IShipmentService _shipmentService;
-        private readonly string _currentUserLocation = "Sarajevo"; // Placeholder for logged-in user
-
-        private List<ShipmentItemDisplay> _shipmentItems = new();
-        private Route _resolvedRoute;
+        private List<InventoryItem> inventoryItems;
+        private List<Truck> trucks;
+        private List<ShipmentItemViewModel> shipmentItems = new();
 
         public AddShipmentWindow()
         {
             InitializeComponent();
 
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlServer("Server=localhost,1433;Database=InventoryDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True")
-                .Options;
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            optionsBuilder.UseSqlServer("Server=localhost,1433;Database=InventoryDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True");
+            _context = new AppDbContext(optionsBuilder.Options);
 
-            _context = new AppDbContext(options);
-            _shipmentService = new ShipmentService(_context);
-
+            DestinationTypeComboBox.SelectedIndex = 0;
             LoadInventoryItems();
         }
 
         private void LoadInventoryItems()
         {
-            var items = _context.InventoryItems.ToList();
-            InventoryItemComboBox.ItemsSource = items;
+            inventoryItems = _context.InventoryItems.ToList();
+            InventoryItemComboBox.ItemsSource = inventoryItems;
             InventoryItemComboBox.DisplayMemberPath = "Name";
-            InventoryItemComboBox.SelectedValuePath = "Id";
         }
 
         private void DestinationTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (DestinationTypeComboBox.SelectedItem is ComboBoxItem selected)
             {
-                string type = selected.Content.ToString();
-
-                if (type == "Client")
+                if (selected.Content.ToString() == "Warehouse")
                 {
-                    var clients = _context.Clients.ToList();
-                    DestinationEntityComboBox.ItemsSource = clients;
+                    DestinationEntityComboBox.ItemsSource = _context.Warehouses.ToList();
                     DestinationEntityComboBox.DisplayMemberPath = "Name";
-                    DestinationEntityComboBox.SelectedValuePath = "Id";
                 }
-                else if (type == "Warehouse")
+                else
                 {
-                    var warehouses = _context.Warehouses.ToList();
-                    DestinationEntityComboBox.ItemsSource = warehouses;
+                    DestinationEntityComboBox.ItemsSource = _context.Clients.ToList();
                     DestinationEntityComboBox.DisplayMemberPath = "Name";
-                    DestinationEntityComboBox.SelectedValuePath = "Id";
                 }
             }
-
-            DestinationEntityComboBox.SelectionChanged += DestinationEntityComboBox_SelectionChanged;
         }
 
         private void DestinationEntityComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ResolveRouteAndLoadTrucks();
-        }
+            if (DestinationEntityComboBox.SelectedItem == null) return;
 
-        private void ResolveRouteAndLoadTrucks()
-        {
-            if (DestinationEntityComboBox.SelectedItem == null || DestinationTypeComboBox.SelectedItem is not ComboBoxItem selectedType)
-                return;
+            string destinationLocation = DestinationTypeComboBox.Text == "Warehouse"
+                ? ((Warehouse)DestinationEntityComboBox.SelectedItem).Location
+                : ((Client)DestinationEntityComboBox.SelectedItem).Location;
 
-            string destinationLocation = string.Empty;
+            string currentLocation = SessionManager.CurrentUser?.Location ?? "Sarajevo";
 
-            if (selectedType.Content.ToString() == "Client" && DestinationEntityComboBox.SelectedItem is Client client)
-                destinationLocation = client.Location;
-            else if (selectedType.Content.ToString() == "Warehouse" && DestinationEntityComboBox.SelectedItem is Warehouse warehouse)
-                destinationLocation = warehouse.Location;
-            else
-                return;
-
-            _resolvedRoute = _context.Routes
-                .FirstOrDefault(r => r.Location1 == _currentUserLocation && r.Location2 == destinationLocation)
-                ?? _context.Routes.FirstOrDefault(r => r.Location2 == _currentUserLocation && r.Location1 == destinationLocation);
-
-            if (_resolvedRoute == null)
+            var route = _context.Routes.FirstOrDefault(r => r.Location1 == currentLocation && r.Location2 == destinationLocation);
+            if (route == null)
             {
                 MessageBox.Show("No route found between current location and destination.");
                 return;
             }
 
-            var trucks = _context.Trucks
-                .Where(t => t.RouteId == _resolvedRoute.Id && t.Location == _currentUserLocation && t.Availability)
+            trucks = _context.Trucks
+                .Where(t => t.RouteId == route.Id && t.Location == currentLocation && t.Availability)
                 .ToList();
 
-            if (!trucks.Any())
-            {
-                MessageBox.Show("No available trucks for this route.");
-            }
+            // Include capacity in label
+            TruckComboBox.ItemsSource = trucks.Select(t => new { Truck = t, Label = $"{t.Name} ({t.LoadCapacity} kg)" }).ToList();
+            TruckComboBox.DisplayMemberPath = "Label";
+            TruckComboBox.SelectedValuePath = "Truck";
+            TruckComboBox.SelectedIndex = 0;
+        }
 
-            TruckComboBox.ItemsSource = trucks;
-            TruckComboBox.DisplayMemberPath = "Name";
-            TruckComboBox.SelectedValuePath = "Id";
+        private void TruckComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateTruckLoadDisplay();
         }
 
         private void AddItemButton_Click(object sender, RoutedEventArgs e)
         {
-            if (InventoryItemComboBox.SelectedItem is InventoryItem item && int.TryParse(QuantityTextBox.Text, out int quantity))
+            if (InventoryItemComboBox.SelectedItem is not InventoryItem item || !int.TryParse(QuantityTextBox.Text, out int qty) || qty <= 0)
+                return;
+
+            double weight = item.WeightPerUnit * qty;
+
+            shipmentItems.Add(new ShipmentItemViewModel
             {
-                var weight = item.WeightPerUnit * quantity;
+                ItemName = item.Name,
+                Quantity = qty,
+                Weight = weight
+            });
 
-                _shipmentItems.Add(new ShipmentItemDisplay
-                {
-                    ItemName = item.Name,
-                    Quantity = quantity,
-                    Weight = weight,
-                    InventoryItemId = item.Id
-                });
+            ShipmentItemsGrid.ItemsSource = null;
+            ShipmentItemsGrid.ItemsSource = shipmentItems;
 
-                ShipmentItemsGrid.ItemsSource = null;
-                ShipmentItemsGrid.ItemsSource = _shipmentItems;
-            }
+            UpdateTruckLoadDisplay();
         }
 
-        private async void SubmitShipmentButton_Click(object sender, RoutedEventArgs e)
+        private void UpdateTruckLoadDisplay()
         {
-            if (_resolvedRoute == null)
-            {
-                MessageBox.Show("Please select a valid destination and route first.");
-                return;
-            }
+            if (TruckComboBox.SelectedItem == null) return;
 
-            if (TruckComboBox.SelectedItem is not Truck selectedTruck)
-            {
-                MessageBox.Show("Please select a truck.");
-                return;
-            }
+            // Extract selected truck from anonymous type
+            var selected = TruckComboBox.SelectedItem;
+            Truck selectedTruck = selected.GetType().GetProperty("Truck")?.GetValue(selected) as Truck;
 
-            if (_shipmentItems.Count == 0)
-            {
-                MessageBox.Show("Please add at least one inventory item.");
-                return;
-            }
+            if (selectedTruck == null) return;
 
-            string destinationType = (DestinationTypeComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
-            int destinationId = (int)(DestinationEntityComboBox.SelectedValue ?? -1);
+            double currentWeight = shipmentItems.Sum(i => i.Weight);
+            double capacity = selectedTruck.LoadCapacity;
 
-            var shipmentDto = new ShipmentCreateDto
-            {
-                DestinationType = destinationType,
-                DestinationEntityId = destinationId,
-                TruckId = selectedTruck.Id,
-                Items = _shipmentItems.Select(i => new ShipmentItemCreateDto
-                {
-                    InventoryItemId = i.InventoryItemId,
-                    Amount = i.Quantity
-                }).ToList()
-            };
-
-            try
-            {
-                await _shipmentService.CreateShipmentAsync(shipmentDto, _currentUserLocation);
-                MessageBox.Show("Shipment successfully created!");
-                this.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error creating shipment: {ex.Message}");
-            }
+            TruckLoadText.Text = $"{currentWeight} / {capacity} kg";
+            TruckLoadProgressBar.Value = Math.Min(100, (currentWeight / capacity) * 100);
         }
 
-        private class ShipmentItemDisplay
+        private void SubmitShipmentButton_Click(object sender, RoutedEventArgs e)
         {
-            public string ItemName { get; set; }
-            public int Quantity { get; set; }
-            public double Weight { get; set; }
-            public int InventoryItemId { get; set; }
+            // Implementation of actual shipment persistence logic...
+            MessageBox.Show("Shipment submitted (not implemented)");
         }
+    }
+
+    public class ShipmentItemViewModel
+    {
+        public string ItemName { get; set; }
+        public int Quantity { get; set; }
+        public double Weight { get; set; }
     }
 }
