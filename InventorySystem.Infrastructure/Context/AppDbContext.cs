@@ -21,6 +21,7 @@ namespace InventorySystem.Infrastructure.Context
         public DbSet<TaskAssignment> TaskAssignments { get; set; }
         public DbSet<InventoryTransaction> InventoryTransactions { get; set; }
         public DbSet<Truck> Trucks { get; set; }
+        public DbSet<TruckMaintenanceRecord> TruckMaintenanceRecords { get; set; }
         public DbSet<ShipmentInventoryItem> ShipmentInventoryItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -39,6 +40,12 @@ namespace InventorySystem.Infrastructure.Context
                 .HasOne(x => x.InventoryItem)
                 .WithMany()
                 .HasForeignKey(x => x.InventoryItemId);
+            modelBuilder.Entity<Truck>()
+                .HasMany(t => t.MaintenanceRecords)
+                .WithOne(m => m.Truck)
+                .HasForeignKey(m => m.TruckId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
 
     }

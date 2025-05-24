@@ -55,8 +55,8 @@ namespace InventorySystem.Presentation
         }
         private void OpenTruck_Click(object sender, RoutedEventArgs e)
         {
-            var truckWindow = new TruckWindow();
-            truckWindow.ShowDialog();
+            var truckMaintenanceWindow = new TruckMaintenanceWindow();
+            truckMaintenanceWindow.ShowDialog();
         }
 
     }

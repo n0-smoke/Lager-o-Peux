@@ -4,6 +4,7 @@ using InventorySystem.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventorySystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250524104744_AddIsInventoryAppliedToShipment")]
+    partial class AddIsInventoryAppliedToShipment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,53 +204,12 @@ namespace InventorySystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsUnderMaintenance")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastMaintenanceDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("MaxCapacityKg")
                         .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Trucks");
-                });
-
-            modelBuilder.Entity("InventorySystem.Domain.Models.TruckMaintenanceRecord", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TruckId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TruckId");
-
-                    b.ToTable("TruckMaintenanceRecords");
                 });
 
             modelBuilder.Entity("InventorySystem.Domain.Models.User", b =>
@@ -338,17 +300,6 @@ namespace InventorySystem.Infrastructure.Migrations
                     b.Navigation("AssignedToUser");
                 });
 
-            modelBuilder.Entity("InventorySystem.Domain.Models.TruckMaintenanceRecord", b =>
-                {
-                    b.HasOne("InventorySystem.Domain.Models.Truck", "Truck")
-                        .WithMany("MaintenanceRecords")
-                        .HasForeignKey("TruckId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Truck");
-                });
-
             modelBuilder.Entity("InventorySystem.Domain.Models.InventoryItem", b =>
                 {
                     b.Navigation("ShipmentItems");
@@ -361,8 +312,6 @@ namespace InventorySystem.Infrastructure.Migrations
 
             modelBuilder.Entity("InventorySystem.Domain.Models.Truck", b =>
                 {
-                    b.Navigation("MaintenanceRecords");
-
                     b.Navigation("Shipments");
                 });
 #pragma warning restore 612, 618

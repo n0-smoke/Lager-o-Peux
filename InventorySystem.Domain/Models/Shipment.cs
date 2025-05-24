@@ -25,7 +25,8 @@ namespace InventorySystem.Domain.Models
         public Truck Truck { get; set; }
 
         public ICollection<ShipmentInventoryItem> ShipmentItems { get; set; }
-
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public bool IsInventoryApplied { get; set; } = false;
+
     }
 }
