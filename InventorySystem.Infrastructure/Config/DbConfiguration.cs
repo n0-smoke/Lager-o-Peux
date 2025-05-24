@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using InventorySystem.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace InventorySystem.Infrastructure.Config
 {
-    class DbConfiguration
+    public static class DbConfiguration
     {
+        public static IServiceCollection AddDatabase(this IServiceCollection services, string connectionString)
+        {
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(connectionString));
+
+            return services;
+        }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.Linq;
 using InventorySystem.Domain.Models;
 using InventorySystem.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -14,23 +9,35 @@ namespace InventorySystem.Infrastructure.Setup
     {
         public static void Initialize(AppDbContext context)
         {
-            // Apply any pending migrations
+            // Apply migrations to ensure DB is up to date
             context.Database.Migrate();
 
-            // Check if users already exist
+            // Skip if users already seeded
             if (context.Users.Any()) return;
 
-            // Example password hash (you'll replace with real hash logic)
-            string fakeHash = BCrypt.Net.BCrypt.HashPassword("admin123");
-
+            // Seed users representing different locations
             context.Users.AddRange(
-                new User { Username = "admin", PasswordHash = fakeHash, Role = "Admin" },
-                new User { Username = "manager", PasswordHash = BCrypt.Net.BCrypt.HashPassword("manager123"), Role = "Manager" },
-                new User { Username = "employee", PasswordHash = BCrypt.Net.BCrypt.HashPassword("employee123"), Role = "Employee" }
+                new User
+                {
+                    Username = "sarajevo",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("sarajevo123"),
+                    Location = "Sarajevo"
+                },
+                new User
+                {
+                    Username = "zagreb",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("zagreb123"),
+                    Location = "Zagreb"
+                },
+                new User
+                {
+                    Username = "belgrade",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("belgrade123"),
+                    Location = "Belgrade"
+                }
             );
 
             context.SaveChanges();
         }
     }
 }
-

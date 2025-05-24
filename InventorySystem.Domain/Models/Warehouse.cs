@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace InventorySystem.Domain.Models;
 
-public class InventoryItem
+public class Warehouse
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public string Category { get; set; }
-    public double WeightPerUnit { get; set; }
+    public string Location { get; set; }
+    public double Capacity { get; set; }
 
     public ICollection<WarehouseItem> WarehouseItems { get; set; }
-    public ICollection<ShipmentItem> ShipmentItems { get; set; }
 }
-
