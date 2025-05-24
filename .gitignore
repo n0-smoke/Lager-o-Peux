@@ -1,0 +1,12 @@
+# Ignore VS and build system folders
+.vs/
+bin/
+obj/
+*.user
+*.suo
+
+# Ignore Rider IDE settings if present
+.idea/
+
+# Ignore app-specific
+appsettings.Development.json

@@ -1,0 +1,93 @@
+﻿<Window x:Class="InventorySystem.Presentation.AddShipmentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Add Shipment"
+        Height="600" Width="700"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 1. Destination Type -->
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Destination Type:"
+                       VerticalAlignment="Center"
+                       Width="120"/>
+            <ComboBox x:Name="DestinationTypeComboBox"
+                      Width="150"
+                      SelectionChanged="DestinationTypeComboBox_SelectionChanged">
+                <ComboBoxItem Content="Warehouse"/>
+                <ComboBoxItem Content="Client"/>
+            </ComboBox>
+        </StackPanel>
+
+        <!-- 2. Destination Entity -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Destination:"
+                       VerticalAlignment="Center"
+                       Width="120"/>
+            <ComboBox x:Name="DestinationEntityComboBox"
+                      Width="300"
+                      SelectionChanged="DestinationEntityComboBox_SelectionChanged"/>
+        </StackPanel>
+
+        <!-- 3. Truck Selection -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Truck:"
+                       VerticalAlignment="Center"
+                       Width="120"/>
+            <ComboBox x:Name="TruckComboBox"
+                      Width="300"/>
+        </StackPanel>
+
+        <!-- 4. Inventory Item Input -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Item:"
+                       VerticalAlignment="Center"
+                       Width="60"/>
+            <ComboBox x:Name="InventoryItemComboBox"
+                      Width="200"
+                      Margin="10,0"/>
+            <TextBlock Text="Qty:"
+                       VerticalAlignment="Center"
+                       Width="40"/>
+            <TextBox x:Name="QuantityTextBox"
+                     Width="80"
+                     Margin="5,0"/>
+            <Button Content="Add Item"
+                    Width="100"
+                    Margin="10,0"
+                    Click="AddItemButton_Click"/>
+        </StackPanel>
+
+        <!-- 5. Shipment Item List -->
+        <DataGrid Grid.Row="4"
+                  x:Name="ShipmentItemsGrid"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  HeadersVisibility="Column"
+                  IsReadOnly="True"
+                  Margin="0,10,0,0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Item" Binding="{Binding ItemName}" Width="*"/>
+                <DataGridTextColumn Header="Qty" Binding="{Binding Quantity}" Width="100"/>
+                <DataGridTextColumn Header="Weight" Binding="{Binding Weight}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- 6. Submit Button -->
+        <Button Grid.Row="5"
+                Content="Submit Shipment"
+                Height="40" Width="200"
+                HorizontalAlignment="Center"
+                Margin="0,20,0,0"
+                Click="SubmitShipmentButton_Click"/>
+    </Grid>
+</Window>
