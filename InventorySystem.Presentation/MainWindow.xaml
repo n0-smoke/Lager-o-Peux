@@ -4,12 +4,23 @@
         Title="Inventory System" Height="350" Width="400"
         WindowStartupLocation="CenterScreen">
     <Grid>
-        <Button Content="Go to Shipments"
-                Width="150"
-                Height="40"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Click="ShipmentButton_Click"/>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0">
+            <Button Content="Go to Shipments"
+                    Width="150"
+                    Height="40"
+                    Margin="0,0,0,10"
+                    Click="ShipmentButton_Click"/>
+
+            <Button Content="Inventory Overview"
+                    Width="150"
+                    Height="40"
+                    Margin="0,0,0,10"
+                    Click="InventoryButton_Click"/>
+
+            <Button Content="Warehouse Overview"
+                    Width="150"
+                    Height="40"
+                    Click="WarehouseButton_Click"/>
+        </StackPanel>
     </Grid>
 </Window>
-

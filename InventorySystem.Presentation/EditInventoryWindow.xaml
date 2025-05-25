@@ -1,0 +1,33 @@
+﻿<Window x:Class="InventorySystem.Presentation.EditInventoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Edit Inventory Item" Height="250" Width="400"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Name -->
+        <Label Content="Name:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <TextBox x:Name="NameBox" Grid.Row="0" Grid.Column="1" Margin="5"/>
+
+        <!-- Category -->
+        <Label Content="Category:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <TextBox x:Name="CategoryBox" Grid.Row="1" Grid.Column="1" Margin="5"/>
+
+        <!-- WeightPerUnit -->
+        <Label Content="Weight per Unit (kg):" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,5"/>
+        <TextBox x:Name="WeightBox" Grid.Row="2" Grid.Column="1" Margin="5"/>
+
+        <!-- Save Button -->
+        <Button Content="Save Changes" Grid.Row="3" Grid.ColumnSpan="2" Margin="0,15,0,0" Height="30" Click="Save_Click"/>
+    </Grid>
+</Window>
