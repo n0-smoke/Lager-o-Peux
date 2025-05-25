@@ -1,0 +1,28 @@
+﻿<Window x:Class="InventorySystem.Presentation.InventoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Inventory" Height="450" Width="700"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanResize">
+    <DockPanel Margin="10">
+        <!-- Buttons at the top -->
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,0,0,10">
+            <Button Content="Add Item" Width="80" Margin="0,0,10,0" Click="Add_Click"/>
+            <Button Content="Edit Item" Width="80" Margin="0,0,10,0" Click="Edit_Click"/>
+            <Button Content="Delete Item" Width="80" Click="Delete_Click"/>
+        </StackPanel>
+
+        <!-- DataGrid -->
+        <DataGrid x:Name="InventoryGrid"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  IsReadOnly="True"
+                  SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="*"/>
+                <DataGridTextColumn Header="Weight (kg)" Binding="{Binding WeightPerUnit}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>
