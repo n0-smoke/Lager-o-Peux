@@ -1,0 +1,30 @@
+﻿<Window x:Class="InventorySystem.Presentation.ShipmentOverviewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Shipment Overview"
+        Height="500" Width="800"
+        WindowStartupLocation="CenterScreen">
+    <DockPanel Margin="10">
+
+        <!-- Top Buttons -->
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+            <Button Content="Add Shipment" Width="120" Click="AddShipment_Click" Margin="0,0,10,0"/>
+            <Button Content="Edit Shipment" Width="120" Click="EditShipment_Click" Margin="0,0,10,0"/>
+            <Button Content="Delete Shipment" Width="120" Click="DeleteShipment_Click"/>
+        </StackPanel>
+
+        <!-- Shipment List -->
+        <DataGrid x:Name="ShipmentsGrid"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
+                <DataGridTextColumn Header="Truck" Binding="{Binding Truck.Name}" Width="150"/>
+                <DataGridTextColumn Header="Route" Binding="{Binding RouteDisplay}" Width="200"/>
+                <DataGridTextColumn Header="Total Weight" Binding="{Binding TotalWeight}" Width="120"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </DockPanel>
+</Window>

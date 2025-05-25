@@ -1,10 +1,16 @@
 ﻿<Window x:Class="InventorySystem.Presentation.AddShipmentWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:InventorySystem.Presentation"
         Title="Add Shipment"
-        Height="650" Width="700"
+        Height="650" Width="800"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
+
+    <Window.Resources>
+        <local:MultiplyConverter x:Key="MultiplyConverter"/>
+    </Window.Resources>
+
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -44,29 +50,71 @@
             <ProgressBar x:Name="TruckLoadProgressBar" Width="200" Height="20" Minimum="0" Maximum="100"/>
         </StackPanel>
 
-        <!-- 5. Inventory Input -->
-        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBlock Text="Item:" VerticalAlignment="Center" Width="60"/>
-            <ComboBox x:Name="InventoryItemComboBox" Width="200" Margin="10,0"/>
-            <TextBlock Text="Qty:" VerticalAlignment="Center" Width="40"/>
-            <TextBox x:Name="QuantityTextBox" Width="80" Margin="5,0"/>
-            <Button Content="Add Item" Width="100" Margin="10,0" Click="AddItemButton_Click"/>
-        </StackPanel>
-
-        <!-- 6. Item List -->
-        <DataGrid Grid.Row="5"
-                  x:Name="ShipmentItemsGrid"
+        <!-- 5. Inventory Item Selection Grid -->
+        <DataGrid Grid.Row="4"
+                  x:Name="InventorySelectionGrid"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   HeadersVisibility="Column"
-                  IsReadOnly="True"
-                  Margin="0,10,0,0">
+                  Margin="0,10,0,10"
+                  IsReadOnly="False"
+                  Height="200"
+                  SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Item" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Category" Binding="{Binding Category}" IsReadOnly="True" Width="150"/>
+                <DataGridTextColumn Header="Weight/Unit" Binding="{Binding WeightPerUnit}" IsReadOnly="True" Width="120"/>
+                <DataGridTextColumn Header="Quantity" Binding="{Binding InputQuantity, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+
+                <!-- ✅ Predicted Weight -->
+                <DataGridTemplateColumn Header="Predicted Weight" Width="130" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource MultiplyConverter}">
+                                        <Binding Path="WeightPerUnit"/>
+                                        <Binding Path="InputQuantity" UpdateSourceTrigger="PropertyChanged"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Add button -->
+                <DataGridTemplateColumn Header="Add" Width="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Add" Click="AddInventoryRowButton_Click" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <DataGrid Grid.Row="5"
+          x:Name="ShipmentItemsGrid"
+          AutoGenerateColumns="False"
+          CanUserAddRows="False"
+          HeadersVisibility="Column"
+          IsReadOnly="True"
+          Margin="0,10,0,0"
+          SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Item" Binding="{Binding ItemName}" Width="*"/>
                 <DataGridTextColumn Header="Qty" Binding="{Binding Quantity}" Width="100"/>
                 <DataGridTextColumn Header="Weight" Binding="{Binding Weight}" Width="100"/>
+                <DataGridTemplateColumn Header="Remove" Width="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="X" Click="RemoveShipmentItem_Click"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+
 
         <!-- 7. Submit -->
         <Button Grid.Row="6"

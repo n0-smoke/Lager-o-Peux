@@ -11,8 +11,8 @@ namespace InventorySystem.Presentation
 
         private void ShipmentButton_Click(object sender, RoutedEventArgs e)
         {
-            var shipmentWindow = new AddShipmentWindow();
-            shipmentWindow.Show();
+            var overview = new ShipmentOverviewWindow();
+            overview.ShowDialog();
         }
     }
 }
