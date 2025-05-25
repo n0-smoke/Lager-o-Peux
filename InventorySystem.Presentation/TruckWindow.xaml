@@ -3,9 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Truck Management" Height="450" Width="800"
         WindowStartupLocation="CenterScreen">
-    <DockPanel Margin="10">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Buttons -->
+            <RowDefinition Height="*"/>
+            <!-- DataGrid -->
+            <RowDefinition Height="Auto"/>
+            <!-- Weather Text -->
+        </Grid.RowDefinitions>
+
         <!-- Top Buttons -->
-        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,0,0,10">
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
             <Button Content="Add Truck" Width="90" Margin="0,0,10,0" Click="Add_Click"/>
             <Button Content="Edit Truck" Width="90" Margin="0,0,10,0" Click="Edit_Click"/>
             <Button Content="Delete Truck" Width="90" Click="Delete_Click"/>
@@ -13,10 +22,12 @@
 
         <!-- Truck List -->
         <DataGrid x:Name="TruckGrid"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  CanUserAddRows="False"
-                  SelectionMode="Single">
+              Grid.Row="1"
+              AutoGenerateColumns="False"
+              IsReadOnly="True"
+              CanUserAddRows="False"
+              SelectionMode="Single"
+              SelectionChanged="TruckGrid_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
@@ -29,5 +40,15 @@
                 <DataGridCheckBoxColumn Header="Available" Binding="{Binding Availability}" Width="Auto"/>
             </DataGrid.Columns>
         </DataGrid>
-    </DockPanel>
+
+        <!-- Weather Display -->
+        <TextBlock x:Name="WeatherTextBlock"
+               Grid.Row="2"
+               Margin="0,10,0,0"
+               FontSize="14"
+               FontWeight="SemiBold"
+               TextWrapping="Wrap"
+               Text="Weather info will appear here when you select a truck."/>
+    </Grid>
+
 </Window>

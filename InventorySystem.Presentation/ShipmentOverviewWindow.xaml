@@ -4,10 +4,18 @@
         Title="Shipment Overview"
         Height="500" Width="800"
         WindowStartupLocation="CenterScreen">
-    <DockPanel Margin="10">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Buttons -->
+            <RowDefinition Height="*"/>
+            <!-- DataGrid -->
+            <RowDefinition Height="Auto"/>
+            <!-- Weather -->
+        </Grid.RowDefinitions>
 
         <!-- Top Buttons -->
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
             <Button Content="Add Shipment" Width="120" Click="AddShipment_Click" Margin="0,0,10,0"/>
             <Button Content="Edit Shipment" Width="120" Click="EditShipment_Click" Margin="0,0,10,0"/>
             <Button Content="Delete Shipment" Width="120" Click="DeleteShipment_Click"/>
@@ -15,9 +23,11 @@
 
         <!-- Shipment List -->
         <DataGrid x:Name="ShipmentsGrid"
+                  Grid.Row="1"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
-                  SelectionMode="Single">
+                  SelectionMode="Single"
+                  SelectionChanged="ShipmentsGrid_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
                 <DataGridTextColumn Header="Truck" Binding="{Binding Truck.Name}" Width="150"/>
@@ -26,5 +36,13 @@
             </DataGrid.Columns>
         </DataGrid>
 
-    </DockPanel>
+        <!-- Weather display -->
+        <TextBlock x:Name="WeatherTextBlock"
+                   Grid.Row="2"
+                   Margin="0,10,0,0"
+                   FontSize="14"
+                   FontWeight="SemiBold"
+                   TextWrapping="Wrap"
+                   Text="Weather info will appear here when you select a shipment."/>
+    </Grid>
 </Window>
