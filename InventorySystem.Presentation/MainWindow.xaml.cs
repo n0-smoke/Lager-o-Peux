@@ -45,10 +45,15 @@ namespace InventorySystem.Presentation
                     new WarehouseMapWindow().Show();
                     break;
 
+                case "open-trucks":
+                    new TruckWindow().Show(); // ✅ Add this line
+                    break;
+
                 default:
                     MessageBox.Show($"Unknown message: {message}");
                     break;
             }
         }
+
     }
 }
