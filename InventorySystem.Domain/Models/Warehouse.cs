@@ -14,4 +14,7 @@ public class Warehouse
     public double Capacity { get; set; }
 
     public ICollection<WarehouseItem> WarehouseItems { get; set; }
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
+
 }

@@ -15,15 +15,14 @@ namespace InventorySystem.Presentation
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optionsBuilder.UseSqlServer("Server=localhost,1433;Database=InventoryDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True");
 
-            // Initialize + seed the database
             using (var context = new AppDbContext(optionsBuilder.Options))
             {
                 DbInitializer.Initialize(context);
             }
 
-            // Launch MainWindow
-            // var loginWindow = new LoginWindow();
-            // loginWindow.Show();
+            // Launch main window
+            var loginWindow = new LoginWindow();
+            loginWindow.Show();
         }
     }
 }

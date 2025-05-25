@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Warehouse Map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script>
+        const map = L.map('map').setView([44.7866, 20.4489], 6);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // JS-accessible function for C# to call
+        window.setWarehouses = function (warehouseList) {
+            console.log("📦 setWarehouses called with:", warehouseList);
+
+            if (!Array.isArray(warehouseList)) return;
+
+            warehouseList.forEach(w => {
+                const marker = L.marker([w.lat, w.lng]).addTo(map);
+
+                const popupContent = `
+            <b>${w.name}</b><br/>
+            <button onclick="viewInventory(${w.id})">View Inventory</button>
+        `;
+
+                marker.bindPopup(popupContent);
+            });
+        };
+
+        // Called when user clicks "View Inventory"
+        function viewInventory(warehouseId) {
+            if (window.chrome?.webview) {
+                window.chrome.webview.postMessage(`open-inventory-${warehouseId}`);
+            }
+        }
+
+        // Request data from .NET
+        window.onload = () => {
+            console.log("📡 JS ready. Sending request to C#...");
+
+            if (window.chrome && window.chrome.webview) {
+                window.chrome.webview.postMessage("request-warehouses");
+            } else {
+                console.warn("⚠️ WebView2 host not detected — running outside C#?");
+            }
+        };
+    </script>
+
+</body>
+</html>

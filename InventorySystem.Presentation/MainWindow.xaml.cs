@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
+using System.Windows;
 
 namespace InventorySystem.Presentation
 {
@@ -7,24 +9,46 @@ namespace InventorySystem.Presentation
         public MainWindow()
         {
             InitializeComponent();
+            InitializeWebView();
         }
 
-        private void ShipmentButton_Click(object sender, RoutedEventArgs e)
+        private async void InitializeWebView()
         {
-            var overview = new ShipmentOverviewWindow();
-            overview.ShowDialog();
+            await webView.EnsureCoreWebView2Async();
+
+            // 🔧 Local development frontend (React/Vite dev server)
+            webView.Source = new Uri("http://localhost:5173");
+
+            // Listen to messages from the frontend
+            webView.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
         }
 
-        private void InventoryButton_Click(object sender, RoutedEventArgs e)
+        private void CoreWebView2_WebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
-            var inventory = new InventoryOverviewWindow(); // Make sure this name matches your class
-            inventory.ShowDialog();
-        }
+            string message = e.TryGetWebMessageAsString();
 
-        private void WarehouseButton_Click(object sender, RoutedEventArgs e)
-        {
-            var warehouse = new WarehouseWindow(); // ✅ Assumes WarehouseWindow.xaml exists
-            warehouse.ShowDialog();
+            switch (message)
+            {
+                case "open-shipments":
+                    new ShipmentOverviewWindow().Show();
+                    break;
+
+                case "open-inventory":
+                    new InventoryOverviewWindow().Show();
+                    break;
+
+                case "open-warehouses":
+                    new WarehouseWindow().Show();
+                    break;
+
+                case "open-map":
+                    new WarehouseMapWindow().Show();
+                    break;
+
+                default:
+                    MessageBox.Show($"Unknown message: {message}");
+                    break;
+            }
         }
     }
 }

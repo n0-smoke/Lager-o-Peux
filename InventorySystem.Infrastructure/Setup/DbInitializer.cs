@@ -25,10 +25,11 @@ namespace InventorySystem.Infrastructure.Setup
             if (!context.Warehouses.Any())
             {
                 context.Warehouses.AddRange(
-                    new Warehouse { Name = "Sarajevo Central", Location = "Sarajevo", Capacity = 10000 },
-                    new Warehouse { Name = "Zagreb Hub", Location = "Zagreb", Capacity = 9000 },
-                    new Warehouse { Name = "Belgrade Depot", Location = "Belgrade", Capacity = 12000 }
+                    new Warehouse { Name = "Sarajevo Central", Location = "Sarajevo", Capacity = 10000, Latitude = 43.8563, Longitude = 18.4131 },
+                    new Warehouse { Name = "Zagreb Hub", Location = "Zagreb", Capacity = 9000, Latitude = 45.8150, Longitude = 15.9819 },
+                    new Warehouse { Name = "Belgrade Depot", Location = "Belgrade", Capacity = 12000, Latitude = 44.7866, Longitude = 20.4489 }
                 );
+                context.SaveChanges();
             }
 
             // Clients

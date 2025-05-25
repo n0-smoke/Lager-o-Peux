@@ -8,18 +8,19 @@ namespace InventorySystem.Presentation
 {
     public partial class WarehouseWindow : Window
     {
-        private readonly WarehouseService _warehouseService;
         private readonly AppDbContext _context;
+        private readonly WarehouseService _warehouseService;
 
         public WarehouseWindow()
         {
             InitializeComponent();
 
             // Configure DbContext
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optionsBuilder.UseSqlServer("Server=localhost,1433;Database=InventoryDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True");
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseSqlServer("Server=localhost,1433;Database=InventoryDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True")
+                .Options;
 
-            _context = new AppDbContext(optionsBuilder.Options);
+            _context = new AppDbContext(options);
             _warehouseService = new WarehouseService(_context);
 
             LoadData();
