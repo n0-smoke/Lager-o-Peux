@@ -1,0 +1,33 @@
+﻿<Window x:Class="InventorySystem.Presentation.TruckWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Truck Management" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen">
+    <DockPanel Margin="10">
+        <!-- Top Buttons -->
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,0,0,10">
+            <Button Content="Add Truck" Width="90" Margin="0,0,10,0" Click="Add_Click"/>
+            <Button Content="Edit Truck" Width="90" Margin="0,0,10,0" Click="Edit_Click"/>
+            <Button Content="Delete Truck" Width="90" Click="Delete_Click"/>
+        </StackPanel>
+
+        <!-- Truck List -->
+        <DataGrid x:Name="TruckGrid"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Route ID" Binding="{Binding RouteId}" Width="Auto"/>
+                <DataGridTextColumn Header="Driver ID" Binding="{Binding DriverId}" Width="Auto"/>
+                <DataGridTextColumn Header="Load Capacity" Binding="{Binding LoadCapacity}" Width="*"/>
+                <DataGridTextColumn Header="Location" Binding="{Binding Location}" Width="*"/>
+                <DataGridTextColumn Header="Fuel Consumption" Binding="{Binding FuelConsumption}" Width="*"/>
+                <DataGridTextColumn Header="Mileage" Binding="{Binding Mileage}" Width="*"/>
+                <DataGridCheckBoxColumn Header="Available" Binding="{Binding Availability}" Width="Auto"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>
