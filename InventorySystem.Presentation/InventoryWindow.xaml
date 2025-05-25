@@ -4,14 +4,16 @@
         Title="Inventory" Height="450" Width="700"
         WindowStartupLocation="CenterScreen" ResizeMode="CanResize">
     <DockPanel Margin="10">
-        <!-- Buttons at the top -->
+        <!-- Top bar: Search + Buttons -->
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0,0,0,10">
+            <TextBox x:Name="CategorySearchBox" Width="150" Margin="0,0,10,0" 
+                     Text="Filter by Category" TextChanged="CategorySearchBox_TextChanged"/>
             <Button Content="Add Item" Width="80" Margin="0,0,10,0" Click="Add_Click"/>
             <Button Content="Edit Item" Width="80" Margin="0,0,10,0" Click="Edit_Click"/>
             <Button Content="Delete Item" Width="80" Click="Delete_Click"/>
         </StackPanel>
 
-        <!-- DataGrid -->
+        <!-- Inventory list -->
         <DataGrid x:Name="InventoryGrid"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
