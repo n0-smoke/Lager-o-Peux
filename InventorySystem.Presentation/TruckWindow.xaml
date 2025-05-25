@@ -1,7 +1,7 @@
 ﻿<Window x:Class="InventorySystem.Presentation.TruckWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Truck Management" Height="450" Width="800"
+        Title="Truck Management" Height="500" Width="900"
         WindowStartupLocation="CenterScreen">
     <DockPanel Margin="10">
         <!-- Top Buttons -->
@@ -16,7 +16,9 @@
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
                   CanUserAddRows="False"
-                  SelectionMode="Single">
+                  SelectionMode="Single"
+                  SelectionChanged="TruckGrid_SelectionChanged"
+                  DockPanel.Dock="Top">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
@@ -29,5 +31,14 @@
                 <DataGridCheckBoxColumn Header="Available" Binding="{Binding Availability}" Width="Auto"/>
             </DataGrid.Columns>
         </DataGrid>
+
+        <!-- Weather Display -->
+        <TextBlock x:Name="WeatherTextBlock"
+                   DockPanel.Dock="Bottom"
+                   Margin="0,10,0,0"
+                   FontSize="14"
+                   FontWeight="SemiBold"
+                   TextWrapping="Wrap"
+                   Text="Weather info will appear here when you select a truck." />
     </DockPanel>
 </Window>

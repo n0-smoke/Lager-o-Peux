@@ -1,6 +1,8 @@
 ﻿using InventorySystem.Domain.Models;
 using InventorySystem.Infrastructure.Context;
+using InventorySystem.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -11,6 +13,7 @@ namespace InventorySystem.Presentation
     public partial class ShipmentOverviewWindow : Window
     {
         private readonly AppDbContext _context;
+        private readonly WeatherService _weatherService = new();
 
         public ShipmentOverviewWindow()
         {
@@ -44,18 +47,18 @@ namespace InventorySystem.Presentation
 
         private void AddShipment_Click(object sender, RoutedEventArgs e)
         {
-            var addWindow = new AddShipmentWindow(); // Should support Add or Edit mode
+            var addWindow = new AddShipmentWindow();
             addWindow.ShowDialog();
-            LoadShipments(); // Refresh after close
+            LoadShipments();
         }
 
         private void EditShipment_Click(object sender, RoutedEventArgs e)
         {
             if (ShipmentsGrid.SelectedItem is not ShipmentOverviewViewModel selected) return;
 
-            var editWindow = new AddShipmentWindow(selected.Id); // ✅ Constructor that loads existing shipment
+            var editWindow = new AddShipmentWindow(selected.Id);
             editWindow.ShowDialog();
-            LoadShipments(); // Refresh
+            LoadShipments();
         }
 
         private async void DeleteShipment_Click(object sender, RoutedEventArgs e)
@@ -93,6 +96,28 @@ namespace InventorySystem.Presentation
             }
         }
 
+        private async void ShipmentsGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ShipmentsGrid.SelectedItem is ShipmentOverviewViewModel selectedShipment)
+            {
+                string destination = selectedShipment.RouteDisplay?.Split('➜').LastOrDefault()?.Trim();
+
+                if (!string.IsNullOrWhiteSpace(destination))
+                {
+                    WeatherTextBlock.Text = $"Loading weather for {destination}...";
+                    string weather = await _weatherService.GetCurrentWeatherAsync(destination);
+                    WeatherTextBlock.Text = weather;
+                }
+                else
+                {
+                    WeatherTextBlock.Text = "No destination found.";
+                }
+            }
+            else
+            {
+                WeatherTextBlock.Text = string.Empty;
+            }
+        }
     }
 
     public class ShipmentOverviewViewModel

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using InventorySystem.Domain.Models;
 using InventorySystem.Infrastructure.Context;
 using InventorySystem.Infrastructure.Services;
@@ -10,6 +11,7 @@ namespace InventorySystem.Presentation
     {
         private readonly AppDbContext _context;
         private readonly WarehouseService _warehouseService;
+        private readonly WeatherService _weatherService = new();
 
         public WarehouseWindow()
         {
@@ -30,6 +32,29 @@ namespace InventorySystem.Presentation
         {
             var warehouses = _warehouseService.GetAllWarehouses();
             WarehouseGrid.ItemsSource = warehouses;
+        }
+
+        private async void WarehouseGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (WarehouseGrid.SelectedItem is Warehouse selectedWarehouse)
+            {
+                string location = selectedWarehouse.Location;
+
+                if (!string.IsNullOrWhiteSpace(location))
+                {
+                    WeatherTextBlock.Text = "Loading weather for " + location + "...";
+                    string weather = await _weatherService.GetCurrentWeatherAsync(location);
+                    WeatherTextBlock.Text = weather;
+                }
+                else
+                {
+                    WeatherTextBlock.Text = "No location set for this warehouse.";
+                }
+            }
+            else
+            {
+                WeatherTextBlock.Text = string.Empty;
+            }
         }
 
         private void Add_Click(object sender, RoutedEventArgs e)

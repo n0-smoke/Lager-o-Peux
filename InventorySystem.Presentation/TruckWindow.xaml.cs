@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using InventorySystem.Domain.Models;
 using InventorySystem.Infrastructure.Context;
 using InventorySystem.Infrastructure.Services;
@@ -10,6 +11,7 @@ namespace InventorySystem.Presentation
     public partial class TruckWindow : Window
     {
         private readonly TruckService _truckService;
+        private readonly WeatherService _weatherService = new();
 
         public TruckWindow()
         {
@@ -73,6 +75,29 @@ namespace InventorySystem.Presentation
             else
             {
                 MessageBox.Show("Please select a truck to delete.");
+            }
+        }
+
+        private async void TruckGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (TruckGrid.SelectedItem is Truck selectedTruck)
+            {
+                string location = selectedTruck.Location;
+
+                if (!string.IsNullOrWhiteSpace(location))
+                {
+                    WeatherTextBlock.Text = "Loading weather for " + location + "...";
+                    string weather = await _weatherService.GetCurrentWeatherAsync(location);
+                    WeatherTextBlock.Text = weather;
+                }
+                else
+                {
+                    WeatherTextBlock.Text = "No location set for this truck.";
+                }
+            }
+            else
+            {
+                WeatherTextBlock.Text = string.Empty;
             }
         }
     }
