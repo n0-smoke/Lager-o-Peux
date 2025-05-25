@@ -25,8 +25,6 @@ namespace InventorySystem.Presentation
 
                 var context = new AppDbContext(optionsBuilder.Options);
                 _inventoryService = new InventoryService(context);
-
-                LoadInventory();
             }
             catch (Exception ex)
             {
@@ -34,7 +32,14 @@ namespace InventorySystem.Presentation
             }
         }
 
-        private void LoadInventory(string? categoryFilter = null)
+        private void InventoryWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            string name = NameSearchBox?.Text?.Trim() ?? string.Empty;
+            string category = CategorySearchBox?.Text?.Trim() ?? string.Empty;
+            LoadInventory(name, category);
+        }
+
+        private void LoadInventory(string? nameFilter = null, string? categoryFilter = null)
         {
             if (_inventoryService == null)
             {
@@ -45,6 +50,14 @@ namespace InventorySystem.Presentation
             try
             {
                 List<InventoryItem> items = _inventoryService.GetAllItems();
+
+                if (!string.IsNullOrWhiteSpace(nameFilter))
+                {
+                    items = items
+                        .Where(i => i.Name != null &&
+                                    i.Name.Contains(nameFilter, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                }
 
                 if (!string.IsNullOrWhiteSpace(categoryFilter))
                 {
@@ -67,7 +80,7 @@ namespace InventorySystem.Presentation
             var addWindow = new AddInventoryWindow();
             if (addWindow.ShowDialog() == true)
             {
-                LoadInventory(CategorySearchBox.Text.Trim());
+                LoadInventory(NameSearchBox?.Text?.Trim(), CategorySearchBox?.Text?.Trim());
             }
         }
 
@@ -78,7 +91,7 @@ namespace InventorySystem.Presentation
                 var editWindow = new EditInventoryWindow(selectedItem);
                 if (editWindow.ShowDialog() == true)
                 {
-                    LoadInventory(CategorySearchBox.Text.Trim());
+                    LoadInventory(NameSearchBox?.Text?.Trim(), CategorySearchBox?.Text?.Trim());
                 }
             }
             else
@@ -99,7 +112,7 @@ namespace InventorySystem.Presentation
                 if (result == MessageBoxResult.Yes && _inventoryService != null)
                 {
                     _inventoryService.DeleteItem(selectedItem.Id);
-                    LoadInventory(CategorySearchBox.Text.Trim());
+                    LoadInventory(NameSearchBox?.Text?.Trim(), CategorySearchBox?.Text?.Trim());
                 }
             }
             else
@@ -108,9 +121,9 @@ namespace InventorySystem.Presentation
             }
         }
 
-        private void CategorySearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            LoadInventory(CategorySearchBox.Text.Trim());
+            LoadInventory(NameSearchBox?.Text?.Trim(), CategorySearchBox?.Text?.Trim());
         }
     }
 }
